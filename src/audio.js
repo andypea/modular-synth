@@ -31,11 +31,12 @@ export function createAudioNode(id, type, data) {
       break;
     }
 
-    case "but": {
+    case "adsr": {
       const node = context.createGain();
       node.gain.value = 0;
       node.attack = data.attack;
-      node.sweep = data.sweep;
+      node.decay = data.decay;
+      node.sustain = data.sustain;
       node.release = data.release;
 
       nodes.set(id, node);
@@ -58,11 +59,19 @@ export function updateAudioNode(id, data) {
   if (data.trigger) {
     const time = context.currentTime;
 
+    console.log(node.attack, node.decay, node.sustain, node.release);
+
     node.gain.cancelScheduledValues(time);
     node.gain.setValueAtTime(0, time);
     node.gain.linearRampToValueAtTime(1, time + node.attack);
-    node.gain.linearRampToValueAtTime(0.5, time + node.sweep);
-    node.gain.linearRampToValueAtTime(0, time + node.sweep + node.release);
+    node.gain.linearRampToValueAtTime(
+      node.sustain,
+      time + node.attack + node.decay
+    );
+    node.gain.linearRampToValueAtTime(
+      0,
+      time + node.attack + node.decay + node.release
+    );
   }
 }
 

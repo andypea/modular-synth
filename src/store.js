@@ -52,8 +52,8 @@ export const useStore = create((set, get) => ({
         break;
       }
 
-      case "but": {
-        const data = { attack: 0.06, sweep: 0.5, release: 0.7 };
+      case "adsr": {
+        const data = { attack: 0.06, decay: 0.25, sustain: 0.5, release: 0.7 };
         const position = { x: 0, y: 0 };
 
         createAudioNode(id, type, data);

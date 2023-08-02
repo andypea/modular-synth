@@ -6,15 +6,17 @@ import { useStore } from "../store";
 
 const selector = (id) => (store) => ({
   setAttack: (e) => store.updateNode(id, { attack: +e.target.value }),
-  setSweep: (e) => store.updateNode(id, { sweep: +e.target.value }),
+  setDecay: (e) => store.updateNode(id, { decay: +e.target.value }),
+  setSustain: (e) => store.updateNode(id, { sustain: +e.target.value }),
   setRelease: (e) => store.updateNode(id, { release: +e.target.value }),
-  trigger: (e) => store.updateNode(id, { trigger: true }),
+  trigger: () => store.updateNode(id, { trigger: true }),
 });
 
-export default function But({ id, data }) {
+export default function Adsr({ id, data }) {
   const { trigger } = useStore(selector(id), shallow);
+  const { setDecay } = useStore(selector(id), shallow);
   const { setAttack } = useStore(selector(id), shallow);
-  const { setSweep } = useStore(selector(id), shallow);
+  const { setSustain } = useStore(selector(id), shallow);
   const { setRelease } = useStore(selector(id), shallow);
 
   return (
@@ -24,8 +26,9 @@ export default function But({ id, data }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-blue-500 text-white text-sm")}
       >
-        Button
+        ASDR
       </p>
+
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
         <p className={tw("text-xs font-bold mb-2")}>Attack</p>
         <input
@@ -38,32 +41,59 @@ export default function But({ id, data }) {
           onChange={setAttack}
         />
         <p className={tw("text-right text-xs")}>{data.attack.toFixed(2)}</p>
+      </label>
 
-        <p className={tw("text-xs font-bold mb-2")}>Sweep</p>
-        <input
-          className="nodrag"
-          type="range"
-          min="0"
-          max="3"
-          step="0.01"
-          value={data.sweep}
-          onChange={setSweep}
-        />
-        <p className={tw("text-right text-xs")}>{data.sweep.toFixed(2)}</p>
+      <hr className={tw("border-gray-200 mx-2")} />
 
-        <p className={tw("text-xs font-bold mb-2")}>Release</p>
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Decay</p>
         <input
           className="nodrag"
           type="range"
           min="0"
           max="1"
           step="0.01"
+          value={data.decay}
+          onChange={setDecay}
+        />
+        <p className={tw("text-right text-xs")}>{data.decay.toFixed(2)}</p>
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Sustain</p>
+        <input
+          className="nodrag"
+          type="range"
+          min="0"
+          max="3"
+          step="0.01"
+          value={data.sustain}
+          onChange={setSustain}
+        />
+        <p className={tw("text-right text-xs")}>{data.sustain.toFixed(2)}</p>
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Release</p>
+        <input
+          className="nodrag"
+          type="range"
+          min="0"
+          max="3"
+          step="0.01"
           value={data.release}
           onChange={setRelease}
         />
         <p className={tw("text-right text-xs")}>{data.release.toFixed(2)}</p>
+      </label>
 
-        <p className={tw("text-xs font-bold mb-2")}>Trigger</p>
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
         <input
           className="nodrag"
           type="button"
