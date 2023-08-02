@@ -1,6 +1,5 @@
 import React from "react";
 import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
@@ -13,11 +12,11 @@ const selector = (id) => (store) => ({
 });
 
 export default function Adsr({ id, data }) {
-  const { trigger } = useStore(selector(id), shallow);
-  const { setDecay } = useStore(selector(id), shallow);
-  const { setAttack } = useStore(selector(id), shallow);
-  const { setSustain } = useStore(selector(id), shallow);
-  const { setRelease } = useStore(selector(id), shallow);
+  const { trigger } = useStore(selector(id));
+  const { setDecay } = useStore(selector(id));
+  const { setAttack } = useStore(selector(id));
+  const { setSustain } = useStore(selector(id));
+  const { setRelease } = useStore(selector(id));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>

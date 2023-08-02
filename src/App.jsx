@@ -5,7 +5,6 @@ import ReactFlow, {
   Panel,
   useReactFlow,
 } from "reactflow";
-import { shallow } from "zustand/shallow";
 import { useStore } from "./store";
 import { tw } from "twind";
 import Osc from "./nodes/Osc";
@@ -36,7 +35,7 @@ const selector = (store) => ({
 });
 
 export default function App() {
-  const store = useStore(selector, shallow);
+  const store = useStore(selector);
   return (
     <ReactFlowProvider>
       <div style={{ width: "100vw", height: "100vh" }}>

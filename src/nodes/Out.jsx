@@ -1,6 +1,5 @@
 import React from "react";
 import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../store";
 import { tw } from "twind";
 
@@ -10,7 +9,7 @@ const selector = (store) => ({
 });
 
 export default function Out({ id, data }) {
-  const { isRunning, toggleAudio } = useStore(selector, shallow);
+  const { isRunning, toggleAudio } = useStore(selector);
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl px-4 py-2")}>

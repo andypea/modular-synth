@@ -1,6 +1,5 @@
 import React from "react";
 import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
@@ -9,7 +8,7 @@ const selector = (id) => (store) => ({
 });
 
 export default function Osc({ id, data }) {
-  const { setGain } = useStore(selector(id), shallow);
+  const { setGain } = useStore(selector(id));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
