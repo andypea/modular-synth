@@ -30,6 +30,17 @@ export function createAudioNode(id, type, data) {
       nodes.set(id, node);
       break;
     }
+
+    case "but": {
+      const node = context.createGain();
+      node.gain.value = 0;
+      node.attack = data.attack;
+      node.sweep = data.sweep;
+      node.release = data.release;
+
+      nodes.set(id, node);
+      break;
+    }
   }
 }
 
@@ -42,6 +53,16 @@ export function updateAudioNode(id, data) {
     } else {
       node[key] = val;
     }
+  }
+
+  if (data.trigger) {
+    const time = context.currentTime;
+
+    node.gain.cancelScheduledValues(time);
+    node.gain.setValueAtTime(0, time);
+    node.gain.linearRampToValueAtTime(1, time + node.attack);
+    node.gain.linearRampToValueAtTime(0.5, time + node.sweep);
+    node.gain.linearRampToValueAtTime(0, time + node.sweep + node.release);
   }
 }
 

@@ -11,6 +11,7 @@ import { tw } from "twind";
 import Osc from "./nodes/Osc";
 import Amp from "./nodes/Amp";
 import Out from "./nodes/Out";
+import But from "./nodes/But";
 
 import "reactflow/dist/style.css";
 
@@ -18,6 +19,7 @@ const nodeTypes = {
   osc: Osc,
   amp: Amp,
   out: Out,
+  but: But,
 };
 
 const selector = (store) => ({
@@ -30,6 +32,7 @@ const selector = (store) => ({
   addEdge: store.addEdge,
   addOsc: () => store.createNode("osc"),
   addAmp: () => store.createNode("amp"),
+  addBut: () => store.createNode("but"),
 });
 
 export default function App() {
@@ -60,6 +63,12 @@ export default function App() {
               onClick={store.addAmp}
             >
               Add Amp
+            </button>
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.addBut}
+            >
+              Add Button
             </button>
           </Panel>
           <Background />
