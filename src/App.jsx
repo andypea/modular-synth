@@ -11,6 +11,7 @@ import Osc from "./nodes/Osc";
 import Amp from "./nodes/Amp";
 import Out from "./nodes/Out";
 import Adsr from "./nodes/Adsr";
+import Vco from "./nodes/Vco";
 
 import "reactflow/dist/style.css";
 
@@ -19,6 +20,7 @@ const nodeTypes = {
   amp: Amp,
   out: Out,
   adsr: Adsr,
+  vco: Vco,
 };
 
 const selector = (store) => ({
@@ -32,6 +34,7 @@ const selector = (store) => ({
   addOsc: () => store.createNode("osc"),
   addAmp: () => store.createNode("amp"),
   addAdsr: () => store.createNode("adsr"),
+  addVco: () => store.createNode("vco"),
 });
 
 export default function App() {
@@ -57,17 +60,26 @@ export default function App() {
             >
               Add Osc
             </button>
+
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addAmp}
             >
               Add Amp
             </button>
+
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addAdsr}
             >
               Add ADSR
+            </button>
+
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.addVco}
+            >
+              Add VCO
             </button>
           </Panel>
           <Background />

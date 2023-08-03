@@ -25,7 +25,7 @@ export default function Osc({ id, data }) {
           className="nodrag"
           type="range"
           min="0"
-          max="1"
+          max="100"
           step="0.01"
           value={data.gain}
           onChange={setGain}

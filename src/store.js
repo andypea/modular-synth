@@ -68,6 +68,16 @@ export const useStore = createWithEqualityFn(
 
           break;
         }
+
+        case "vco": {
+          const data = { type: "sine" };
+          const position = { x: 0, y: 0 };
+
+          createAudioNode(id, type, data);
+          set({ nodes: [...get().nodes, { id, type, data, position }] });
+
+          break;
+        }
       }
     },
 

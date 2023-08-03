@@ -42,6 +42,17 @@ export function createAudioNode(id, type, data) {
       nodes.set(id, node);
       break;
     }
+
+    case "vco": {
+      const node = context.createOscillator();
+      node.frequency.value = 440;
+      node.type = data.type;
+      node.nodeType = "vco";
+      node.start();
+
+      nodes.set(id, node);
+      break;
+    }
   }
 }
 
@@ -88,12 +99,20 @@ export function connect({ source, target, sourceHandle, targetHandle } = {}) {
   const sourceNode = nodes.get(source);
   const targetNode = nodes.get(target);
 
-  sourceNode.connect(targetNode);
+  if (targetNode.nodeType === "vco") {
+    sourceNode.connect(targetNode.frequency);
+  } else {
+    sourceNode.connect(targetNode);
+  }
 }
 
 export function disconnect(sourceId, targetId) {
   const source = nodes.get(sourceId);
   const target = nodes.get(targetId);
 
-  source.disconnect(target);
+  if (target.nodeType === "vco") {
+    source.disconnect(target.frequency);
+  } else {
+    source.disconnect(target);
+  }
 }
