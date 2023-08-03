@@ -101,7 +101,12 @@ export default function Adsr({ id, data }) {
         />
       </label>
 
-      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
+      <Handle
+        className={tw("w-2 h-2")}
+        type="source"
+        position="bottom"
+        id="output"
+      />
     </div>
   );
 }

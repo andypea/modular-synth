@@ -84,11 +84,11 @@ export function removeAudioNode(id) {
   nodes.delete(id);
 }
 
-export function connect(sourceId, targetId) {
-  const source = nodes.get(sourceId);
-  const target = nodes.get(targetId);
+export function connect({ source, target, sourceHandle, targetHandle } = {}) {
+  const sourceNode = nodes.get(source);
+  const targetNode = nodes.get(target);
 
-  source.connect(target);
+  sourceNode.connect(targetNode);
 }
 
 export function disconnect(sourceId, targetId) {

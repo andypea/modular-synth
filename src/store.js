@@ -98,12 +98,12 @@ export const useStore = createWithEqualityFn(
       const id = nanoid(6);
       const edge = { id, ...data };
 
-      connect(edge.source, edge.target);
+      connect(data);
       set({ edges: [edge, ...get().edges] });
     },
 
     onEdgesDelete(deleted) {
-      for ({ source, target } of deleted) {
+      for (const { source, target } of deleted) {
         disconnect(source, target);
       }
     },
