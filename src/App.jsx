@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useCallback } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   Background,
@@ -29,10 +29,14 @@ const selector = (store) => ({
   onEdgesDelete: store.onEdgesDelete,
   addEdge: store.addEdge,
   createNode: (key) => store.createNode(key),
+  reset: store.reset,
+  save: store.save,
+  restore: store.restore,
 });
 
 export default function App() {
   const store = useStore(selector);
+
   return (
     <ReactFlowProvider>
       <div style={{ width: "100vw", height: "100vh" }}>
@@ -48,6 +52,28 @@ export default function App() {
           fitView
           fitViewOptions={{ maxZoom: 1 }}
         >
+          <Panel className={tw("space-x-4")} position="top-left">
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.save}
+            >
+              Save
+            </button>
+
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.restore}
+            >
+              Restore
+            </button>
+
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.reset}
+            >
+              Reset
+            </button>
+          </Panel>
           <Panel className={tw("space-x-4")} position="top-right">
             {[...availableNodes.entries()].map(([key, value]) => (
               <button

@@ -14,6 +14,8 @@ import {
 } from "./audio";
 import availableNodes from "./nodes/nodes";
 
+const storageKey = "modular-synth-flow";
+
 export const useStore = createWithEqualityFn(
   (set, get) => ({
     nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
@@ -32,11 +34,11 @@ export const useStore = createWithEqualityFn(
       });
     },
 
-    createNode(type, x, y) {
-      const id = nanoid();
+    createNode(type, x = 0, y = 0, id) {
+      id = id ?? nanoid();
 
       const data = availableNodes.get(type).initialData;
-      const position = { x: 0, y: 0 };
+      const position = { x: x, y: y };
       createAudioNode(id, type, data);
       set({ nodes: [...get().nodes, { id, type, data, position }] });
     },
@@ -79,6 +81,43 @@ export const useStore = createWithEqualityFn(
     onEdgesDelete(deleted) {
       for (const data of deleted) {
         disconnect(data);
+      }
+    },
+
+    reset() {
+      for (const e of get().edges) {
+        disconnect(e);
+      }
+      for (const n of get().nodes) {
+        if (n.type !== "out") {
+          removeAudioNode(n.id);
+        }
+      }
+      set({
+        edges: [],
+        nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
+      });
+    },
+
+    save() {
+      localStorage.setItem(storageKey, JSON.stringify(get()));
+    },
+
+    restore() {
+      get().reset();
+
+      const data = JSON.parse(localStorage.getItem(storageKey));
+
+      if (data) {
+        for (const n of data.nodes) {
+          if (n.type !== "out") {
+            get().createNode(n.type, n.position.x, n.position.y, n.id);
+            get().updateNode(n.id, n.data);
+          }
+        }
+        for (const e of data.edges) {
+          get().addEdge(e);
+        }
       }
     },
   }),
