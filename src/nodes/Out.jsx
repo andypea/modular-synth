@@ -13,7 +13,7 @@ export default function Out({ id, data }) {
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl px-4 py-2")}>
-      <Handle className={tw("w-2 h-2")} type="target" position="top" />
+      <Handle className={tw("w-3 h-3")} type="target" position="top" />
 
       <button onClick={toggleAudio}>
         {isRunning ? (

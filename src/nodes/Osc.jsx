@@ -44,7 +44,7 @@ function Node({ id, data }) {
         </select>
       </label>
 
-      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
+      <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
   );
 }
