@@ -8,10 +8,10 @@ const selector = (id) => (store) => ({
   setDecay: (e) => store.updateNode(id, { decay: +e.target.value }),
   setSustain: (e) => store.updateNode(id, { sustain: +e.target.value }),
   setRelease: (e) => store.updateNode(id, { release: +e.target.value }),
-  trigger: () => store.updateNode(id, { trigger: true }),
+  trigger: () => store.messageNode(id, { trigger: true }),
 });
 
-export default function Adsr({ id, data }) {
+function Node({ id, data }) {
   const { trigger } = useStore(selector(id));
   const { setDecay } = useStore(selector(id));
   const { setAttack } = useStore(selector(id));
@@ -25,7 +25,7 @@ export default function Adsr({ id, data }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-blue-500 text-white text-sm")}
       >
-        ASDR
+        ADSR
       </p>
 
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
@@ -101,12 +101,61 @@ export default function Adsr({ id, data }) {
         />
       </label>
 
-      <Handle
-        className={tw("w-2 h-2")}
-        type="source"
-        position="bottom"
-        id="output"
-      />
+      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
     </div>
   );
 }
+
+function trigger(context, node) {
+  const time = context.currentTime;
+
+  node.gain.cancelScheduledValues(time);
+  node.gain.setValueAtTime(0, time);
+  node.gain.linearRampToValueAtTime(1, time + node.attack);
+  node.gain.linearRampToValueAtTime(
+    node.sustain,
+    time + node.attack + node.decay
+  );
+  node.gain.linearRampToValueAtTime(
+    0,
+    time + node.attack + node.decay + node.release
+  );
+}
+
+function receiveMessage(message, context, node) {
+  if (message.trigger) {
+    trigger(context, node);
+  }
+}
+
+function createAudioNode(context, data) {
+  const node = context.createGain();
+  node.gain.value = 0;
+  node.attack = data.attack;
+  node.decay = data.decay;
+  node.sustain = data.sustain;
+  node.release = data.release;
+
+  node.receiveMessage = receiveMessage;
+
+  return node;
+}
+
+const initialData = {
+  attack: 0.06,
+  decay: 0.25,
+  sustain: 0.5,
+  release: 0.7,
+};
+
+const key = "adsr";
+
+const name = "ADSR";
+
+export default {
+  node: Node,
+  key: key,
+  createAudioNode: createAudioNode,
+  name: name,
+  initialData: initialData,
+};

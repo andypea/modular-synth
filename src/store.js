@@ -7,10 +7,15 @@ import {
   toggleAudio,
   createAudioNode,
   updateAudioNode,
+  messageAudioNode,
   removeAudioNode,
   connect,
   disconnect,
 } from "./audio";
+import { default as Adsr } from "./nodes/Adsr";
+import { default as Osc } from "./nodes/Osc";
+import { default as Amp } from "./nodes/Amp";
+import { default as Vco } from "./nodes/Vco";
 
 export const useStore = createWithEqualityFn(
   (set, get) => ({
@@ -34,8 +39,8 @@ export const useStore = createWithEqualityFn(
       const id = nanoid();
 
       switch (type) {
-        case "osc": {
-          const data = { frequency: 440, type: "sine" };
+        case Osc.key: {
+          const data = Osc.initialData;
           const position = { x: 0, y: 0 };
 
           createAudioNode(id, type, data);
@@ -44,8 +49,8 @@ export const useStore = createWithEqualityFn(
           break;
         }
 
-        case "amp": {
-          const data = { gain: 0.5 };
+        case Amp.key: {
+          const data = Amp.initialData;
           const position = { x: 0, y: 0 };
 
           createAudioNode(id, type, data);
@@ -54,13 +59,8 @@ export const useStore = createWithEqualityFn(
           break;
         }
 
-        case "adsr": {
-          const data = {
-            attack: 0.06,
-            decay: 0.25,
-            sustain: 0.5,
-            release: 0.7,
-          };
+        case Adsr.key: {
+          const data = Adsr.initialData;
           const position = { x: 0, y: 0 };
 
           createAudioNode(id, type, data);
@@ -69,8 +69,8 @@ export const useStore = createWithEqualityFn(
           break;
         }
 
-        case "vco": {
-          const data = { type: "sine" };
+        case Vco.key: {
+          const data = Vco.initialData;
           const position = { x: 0, y: 0 };
 
           createAudioNode(id, type, data);
@@ -90,6 +90,10 @@ export const useStore = createWithEqualityFn(
             : node
         ),
       });
+    },
+
+    messageNode(id, message) {
+      messageAudioNode(id, message);
     },
 
     onNodesDelete(deleted) {
@@ -113,8 +117,8 @@ export const useStore = createWithEqualityFn(
     },
 
     onEdgesDelete(deleted) {
-      for (const { source, target } of deleted) {
-        disconnect(source, target);
+      for (const data of deleted) {
+        disconnect(data);
       }
     },
   }),

@@ -7,7 +7,7 @@ const selector = (id) => (store) => ({
   setGain: (e) => store.updateNode(id, { gain: +e.target.value }),
 });
 
-export default function Osc({ id, data }) {
+function Node({ id, data }) {
   const { setGain } = useStore(selector(id));
 
   return (
@@ -37,3 +37,24 @@ export default function Osc({ id, data }) {
     </div>
   );
 }
+
+const key = "amp";
+
+const name = "Amp";
+
+const initialData = { gain: 0.5 };
+
+function createAudioNode(context, data) {
+  const node = context.createGain();
+  node.gain.value = data.gain;
+
+  return node;
+}
+
+export default {
+  node: Node,
+  key: key,
+  createAudioNode: createAudioNode,
+  name: name,
+  initialData: initialData,
+};

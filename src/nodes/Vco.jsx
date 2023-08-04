@@ -7,7 +7,7 @@ const selector = (id) => (store) => ({
   setType: (e) => store.updateNode(id, { type: e.target.value }),
 });
 
-export default function Vco({ id, data }) {
+function Node({ id, data }) {
   const { setFrequency, setType } = useStore(selector(id));
 
   return (
@@ -15,7 +15,7 @@ export default function Vco({ id, data }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
-        Osc
+        VCO
       </p>
 
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
@@ -32,14 +32,32 @@ export default function Vco({ id, data }) {
         className={tw("w-2 h-2")}
         type="target"
         position="top"
-        id="input"
+        id="frequency"
       />
-      <Handle
-        className={tw("w-2 h-2")}
-        type="source"
-        position="bottom"
-        id="output"
-      />
+      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
     </div>
   );
 }
+
+const key = "vco";
+const name = "VCO";
+
+const initialData = { type: "sine" };
+
+function createAudioNode(context, data) {
+  const node = context.createOscillator();
+  node.frequency.value = 440;
+  node.type = data.type;
+  node.nodeType = "vco";
+  node.start();
+
+  return node;
+}
+
+export default {
+  node: Node,
+  key: key,
+  createAudioNode: createAudioNode,
+  name: name,
+  initialData: initialData,
+};

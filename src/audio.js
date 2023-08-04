@@ -1,3 +1,8 @@
+import { default as Adsr } from "./nodes/Adsr";
+import { default as Osc } from "./nodes/Osc";
+import { default as Amp } from "./nodes/Amp";
+import { default as Vco } from "./nodes/Vco";
+
 const context = new AudioContext();
 const nodes = new Map();
 
@@ -13,43 +18,26 @@ export function toggleAudio() {
 
 export function createAudioNode(id, type, data) {
   switch (type) {
-    case "osc": {
-      const node = context.createOscillator();
-      node.frequency.value = data.frequency;
-      node.type = data.type;
-      node.start();
-
+    case Osc.key: {
+      const node = Osc.createAudioNode(context, data);
       nodes.set(id, node);
       break;
     }
 
-    case "amp": {
-      const node = context.createGain();
-      node.gain.value = data.gain;
-
+    case Amp.key: {
+      const node = Amp.createAudioNode(context, data);
       nodes.set(id, node);
       break;
     }
 
-    case "adsr": {
-      const node = context.createGain();
-      node.gain.value = 0;
-      node.attack = data.attack;
-      node.decay = data.decay;
-      node.sustain = data.sustain;
-      node.release = data.release;
-
+    case Adsr.key: {
+      const node = Adsr.createAudioNode(context, data);
       nodes.set(id, node);
       break;
     }
 
-    case "vco": {
-      const node = context.createOscillator();
-      node.frequency.value = 440;
-      node.type = data.type;
-      node.nodeType = "vco";
-      node.start();
-
+    case Vco.key: {
+      const node = Vco.createAudioNode(context, data);
       nodes.set(id, node);
       break;
     }
@@ -66,24 +54,11 @@ export function updateAudioNode(id, data) {
       node[key] = val;
     }
   }
+}
 
-  if (data.trigger) {
-    const time = context.currentTime;
-
-    console.log(node.attack, node.decay, node.sustain, node.release);
-
-    node.gain.cancelScheduledValues(time);
-    node.gain.setValueAtTime(0, time);
-    node.gain.linearRampToValueAtTime(1, time + node.attack);
-    node.gain.linearRampToValueAtTime(
-      node.sustain,
-      time + node.attack + node.decay
-    );
-    node.gain.linearRampToValueAtTime(
-      0,
-      time + node.attack + node.decay + node.release
-    );
-  }
+export function messageAudioNode(id, message) {
+  const node = nodes.get(id);
+  node.receiveMessage(message, context, node);
 }
 
 export function removeAudioNode(id) {
@@ -95,24 +70,22 @@ export function removeAudioNode(id) {
   nodes.delete(id);
 }
 
-export function connect({ source, target, sourceHandle, targetHandle } = {}) {
+export function connect({ source, target, sourceHandle, targetHandle }) {
   const sourceNode = nodes.get(source);
   const targetNode = nodes.get(target);
 
-  if (targetNode.nodeType === "vco") {
-    sourceNode.connect(targetNode.frequency);
-  } else {
-    sourceNode.connect(targetNode);
-  }
+  const trueSource = sourceHandle ? sourceNode[sourceHandle] : sourceNode;
+  const trueTarget = targetHandle ? targetNode[targetHandle] : targetNode;
+
+  trueSource.connect(trueTarget);
 }
 
-export function disconnect(sourceId, targetId) {
-  const source = nodes.get(sourceId);
-  const target = nodes.get(targetId);
+export function disconnect({ source, target, sourceHandle, targetHandle }) {
+  const sourceNode = nodes.get(source);
+  const targetNode = nodes.get(target);
 
-  if (target.nodeType === "vco") {
-    source.disconnect(target.frequency);
-  } else {
-    source.disconnect(target);
-  }
+  const trueSource = sourceHandle ? sourceNode[sourceHandle] : sourceNode;
+  const trueTarget = targetHandle ? targetNode[targetHandle] : targetNode;
+
+  trueSource.disconnect(trueTarget);
 }

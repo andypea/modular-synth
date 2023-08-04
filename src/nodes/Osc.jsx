@@ -8,7 +8,7 @@ const selector = (id) => (store) => ({
   setType: (e) => store.updateNode(id, { type: e.target.value }),
 });
 
-export default function Osc({ id, data }) {
+function Node({ id, data }) {
   const { setFrequency, setType } = useStore(selector(id));
 
   return (
@@ -48,3 +48,24 @@ export default function Osc({ id, data }) {
     </div>
   );
 }
+
+const key = "osc";
+const name = "Osc";
+function createAudioNode(context, data) {
+  const node = context.createOscillator();
+  node.frequency.value = data.frequency;
+  node.type = data.type;
+  node.start();
+
+  return node;
+}
+
+const initialData = { frequency: 440, type: "sine" };
+
+export default {
+  node: Node,
+  key: key,
+  createAudioNode: createAudioNode,
+  name: name,
+  initialData: initialData,
+};

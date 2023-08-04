@@ -7,20 +7,20 @@ import ReactFlow, {
 } from "reactflow";
 import { useStore } from "./store";
 import { tw } from "twind";
-import Osc from "./nodes/Osc";
-import Amp from "./nodes/Amp";
 import Out from "./nodes/Out";
-import Adsr from "./nodes/Adsr";
-import Vco from "./nodes/Vco";
+import { default as Adsr } from "./nodes/Adsr";
+import { default as Osc } from "./nodes/Osc";
+import { default as Amp } from "./nodes/Amp";
+import { default as Vco } from "./nodes/Vco";
 
 import "reactflow/dist/style.css";
 
 const nodeTypes = {
-  osc: Osc,
-  amp: Amp,
+  [Osc.key]: Osc.node,
+  [Amp.key]: Amp.node,
+  [Adsr.key]: Adsr.node,
+  [Vco.key]: Vco.node,
   out: Out,
-  adsr: Adsr,
-  vco: Vco,
 };
 
 const selector = (store) => ({
@@ -31,10 +31,10 @@ const selector = (store) => ({
   onEdgesChange: store.onEdgesChange,
   onEdgesDelete: store.onEdgesDelete,
   addEdge: store.addEdge,
-  addOsc: () => store.createNode("osc"),
-  addAmp: () => store.createNode("amp"),
-  addAdsr: () => store.createNode("adsr"),
-  addVco: () => store.createNode("vco"),
+  addOsc: () => store.createNode(Osc.key),
+  addAmp: () => store.createNode(Amp.key),
+  addAdsr: () => store.createNode(Adsr.key),
+  addVco: () => store.createNode(Vco.key),
 });
 
 export default function App() {
@@ -58,28 +58,28 @@ export default function App() {
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addOsc}
             >
-              Add Osc
+              Add {Osc.name}
             </button>
 
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addAmp}
             >
-              Add Amp
+              Add {Amp.name}
             </button>
 
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addAdsr}
             >
-              Add ADSR
+              Add {Adsr.name}
             </button>
 
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.addVco}
             >
-              Add VCO
+              Add {Vco.name}
             </button>
           </Panel>
           <Background />
