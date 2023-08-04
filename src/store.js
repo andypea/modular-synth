@@ -12,10 +12,7 @@ import {
   connect,
   disconnect,
 } from "./audio";
-import { default as Adsr } from "./nodes/Adsr";
-import { default as Osc } from "./nodes/Osc";
-import { default as Amp } from "./nodes/Amp";
-import { default as Vco } from "./nodes/Vco";
+import availableNodes from "./nodes/nodes";
 
 export const useStore = createWithEqualityFn(
   (set, get) => ({
@@ -38,47 +35,10 @@ export const useStore = createWithEqualityFn(
     createNode(type, x, y) {
       const id = nanoid();
 
-      switch (type) {
-        case Osc.key: {
-          const data = Osc.initialData;
-          const position = { x: 0, y: 0 };
-
-          createAudioNode(id, type, data);
-          set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-          break;
-        }
-
-        case Amp.key: {
-          const data = Amp.initialData;
-          const position = { x: 0, y: 0 };
-
-          createAudioNode(id, type, data);
-          set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-          break;
-        }
-
-        case Adsr.key: {
-          const data = Adsr.initialData;
-          const position = { x: 0, y: 0 };
-
-          createAudioNode(id, type, data);
-          set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-          break;
-        }
-
-        case Vco.key: {
-          const data = Vco.initialData;
-          const position = { x: 0, y: 0 };
-
-          createAudioNode(id, type, data);
-          set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-          break;
-        }
-      }
+      const data = availableNodes.get(type).initialData;
+      const position = { x: 0, y: 0 };
+      createAudioNode(id, type, data);
+      set({ nodes: [...get().nodes, { id, type, data, position }] });
     },
 
     updateNode(id, data) {
