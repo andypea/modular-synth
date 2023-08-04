@@ -46,6 +46,7 @@ export default function App() {
           onEdgesDelete={store.onEdgesDelete}
           onConnect={store.addEdge}
           fitView
+          fitViewOptions={{ maxZoom: 1 }}
         >
           <Panel className={tw("space-x-4")} position="top-right">
             {[...availableNodes.entries()].map(([key, value]) => (
