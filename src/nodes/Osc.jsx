@@ -50,7 +50,7 @@ function Node({ id, data }) {
 }
 
 const key = "osc";
-const name = "Osc";
+const name = "Oscillator";
 function createAudioNode(context, data) {
   const node = context.createOscillator();
   node.frequency.value = data.frequency;
