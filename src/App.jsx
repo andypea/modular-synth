@@ -8,7 +8,7 @@ import ReactFlow, {
 import { useStore } from "./store";
 import { tw } from "twind";
 import Out from "./nodes/Out";
-import nodes from "./nodes/nodes";
+import availableNodes from "./nodes/nodes";
 
 import "reactflow/dist/style.css";
 
@@ -16,7 +16,7 @@ const nodeTypes = {
   out: Out,
 };
 
-nodes.forEach((value, key) => {
+availableNodes.forEach((value, key) => {
   nodeTypes[key] = value.node;
 });
 
@@ -48,7 +48,7 @@ export default function App() {
           fitView
         >
           <Panel className={tw("space-x-4")} position="top-right">
-            {[...nodes.entries()].map(([key, value]) => (
+            {[...availableNodes.entries()].map(([key, value]) => (
               <button
                 key={key}
                 className={tw("px-2 py-1 rounded bg-white shadow")}

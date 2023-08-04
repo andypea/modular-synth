@@ -1,7 +1,4 @@
-import { default as Adsr } from "./nodes/Adsr";
-import { default as Osc } from "./nodes/Osc";
-import { default as Amp } from "./nodes/Amp";
-import { default as Vco } from "./nodes/Vco";
+import availableNodes from "./nodes/nodes";
 
 const context = new AudioContext();
 const nodes = new Map();
@@ -17,31 +14,8 @@ export function toggleAudio() {
 }
 
 export function createAudioNode(id, type, data) {
-  switch (type) {
-    case Osc.key: {
-      const node = Osc.createAudioNode(context, data);
-      nodes.set(id, node);
-      break;
-    }
-
-    case Amp.key: {
-      const node = Amp.createAudioNode(context, data);
-      nodes.set(id, node);
-      break;
-    }
-
-    case Adsr.key: {
-      const node = Adsr.createAudioNode(context, data);
-      nodes.set(id, node);
-      break;
-    }
-
-    case Vco.key: {
-      const node = Vco.createAudioNode(context, data);
-      nodes.set(id, node);
-      break;
-    }
-  }
+  const node = availableNodes.get(type).createAudioNode(context, data);
+  nodes.set(id, node);
 }
 
 export function updateAudioNode(id, data) {
