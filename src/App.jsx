@@ -8,20 +8,17 @@ import ReactFlow, {
 import { useStore } from "./store";
 import { tw } from "twind";
 import Out from "./nodes/Out";
-import { default as Adsr } from "./nodes/Adsr";
-import { default as Osc } from "./nodes/Osc";
-import { default as Amp } from "./nodes/Amp";
-import { default as Vco } from "./nodes/Vco";
+import nodes from "./nodes/nodes";
 
 import "reactflow/dist/style.css";
 
 const nodeTypes = {
-  [Osc.key]: Osc.node,
-  [Amp.key]: Amp.node,
-  [Adsr.key]: Adsr.node,
-  [Vco.key]: Vco.node,
   out: Out,
 };
+
+nodes.forEach((value, key) => {
+  nodeTypes[key] = value.node;
+});
 
 const selector = (store) => ({
   nodes: store.nodes,
@@ -31,10 +28,7 @@ const selector = (store) => ({
   onEdgesChange: store.onEdgesChange,
   onEdgesDelete: store.onEdgesDelete,
   addEdge: store.addEdge,
-  addOsc: () => store.createNode(Osc.key),
-  addAmp: () => store.createNode(Amp.key),
-  addAdsr: () => store.createNode(Adsr.key),
-  addVco: () => store.createNode(Vco.key),
+  createNode: (key) => store.createNode(key),
 });
 
 export default function App() {
@@ -54,33 +48,13 @@ export default function App() {
           fitView
         >
           <Panel className={tw("space-x-4")} position="top-right">
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.addOsc}
-            >
-              Add {Osc.name}
-            </button>
-
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.addAmp}
-            >
-              Add {Amp.name}
-            </button>
-
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.addAdsr}
-            >
-              Add {Adsr.name}
-            </button>
-
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.addVco}
-            >
-              Add {Vco.name}
-            </button>
+            {[...nodes.entries()].map(([key, value]) => (
+              <button
+                key={key}
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={() => store.createNode(key)}
+              >{`Add ${value.name}`}</button>
+            ))}
           </Panel>
           <Background />
         </ReactFlow>
