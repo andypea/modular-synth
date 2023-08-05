@@ -16,6 +16,7 @@ import availableNodes from "./nodes/nodes";
 
 const storageKey = "modular-synth-flow";
 
+// TODO: Prevent the same handle from being connected twice.
 export const useStore = createWithEqualityFn(
   (set, get) => ({
     nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
@@ -37,7 +38,7 @@ export const useStore = createWithEqualityFn(
     createNode(type, x = 0, y = 0, id) {
       id = id ?? nanoid();
 
-      const data = availableNodes.get(type).initialData;
+      const data = structuredClone(availableNodes.get(type).initialData);
       const position = { x: x, y: y };
       createAudioNode(id, type, data);
       set({ nodes: [...get().nodes, { id, type, data, position }] });

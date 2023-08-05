@@ -16,7 +16,7 @@ function Node({ id, data }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
-        Osc
+        Oscillator
       </p>
 
       <label className={tw("flex flex-col px-2 py-1")}>

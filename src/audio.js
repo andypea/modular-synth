@@ -51,6 +51,9 @@ export function connect({ source, target, sourceHandle, targetHandle }) {
   const trueSource = sourceHandle ? sourceNode[sourceHandle] : sourceNode;
   const trueTarget = targetHandle ? targetNode[targetHandle] : targetNode;
 
+  console.log(trueSource);
+  console.log(trueTarget);
+
   trueSource.connect(trueTarget);
 }
 
