@@ -50,6 +50,7 @@ const key = "biosc";
 
 const name = "Bi-Oscillator";
 
+// TODO: type (and other params) are not updated.
 function createAudioNode(context, data) {
   const frequency = context.createGain();
 
@@ -99,6 +100,10 @@ function createAudioNode(context, data) {
     },
     frequency: frequency,
     mixer: mixer,
+    set type(type) {
+      node1.type = type;
+      node2.type = type;
+    },
   };
 }
 
