@@ -3,6 +3,10 @@ import availableNodes from "./nodes/nodes";
 const context = new AudioContext();
 const nodes = new Map();
 
+await context.audioWorklet.addModule(
+  "/audioWorkletProcessors/random-noise-processor.js"
+);
+
 nodes.set("output", context.destination);
 
 export function isRunning() {
