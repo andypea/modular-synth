@@ -11,6 +11,7 @@ import {
   removeAudioNode,
   connect,
   disconnect,
+  context,
 } from "./audio";
 import availableNodes from "./nodes/nodes";
 
@@ -22,6 +23,7 @@ export const useStore = createWithEqualityFn(
     nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
     edges: [],
     isRunning: isRunning(),
+    context: context,
 
     toggleAudio() {
       toggleAudio().then(() => {

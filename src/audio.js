@@ -1,6 +1,6 @@
 import availableNodes from "./nodes/nodes";
 
-const context = new AudioContext();
+export const context = new AudioContext();
 const nodes = new Map();
 
 await context.audioWorklet.addModule(
