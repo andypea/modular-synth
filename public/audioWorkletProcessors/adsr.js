@@ -2,6 +2,7 @@ class Adsr extends AudioWorkletProcessor {
   constructor() {
     super();
     this.timeSinceTrigger = -1.0;
+    this.timeSinceRelease = -1.0;
     this.high = false;
   }
 
@@ -20,6 +21,7 @@ class Adsr extends AudioWorkletProcessor {
           this.timeSinceTrigger = 0.0;
         } else if (this.high && trigger[i] < 0.5) {
           this.high = false;
+          this.timeSinceRelease = 0.0;
         }
 
         const outputLevelValue = this.outputLevel(
@@ -27,11 +29,19 @@ class Adsr extends AudioWorkletProcessor {
           parameters.attack[0],
           parameters.decay[0],
           parameters.sustain[0],
-          parameters.release[0]
+          parameters.release[0],
+          this.high,
+          this.timeSinceRelease
         );
 
         if (this.timeSinceTrigger >= 0.0) {
           this.timeSinceTrigger += timePerFrame;
+        }
+        if (
+          this.timeSinceRelease >= 0.0 &&
+          this.timeSinceTrigger > parameters.attack[0] + parameters.decay[0]
+        ) {
+          this.timeSinceRelease += timePerFrame;
         }
         for (const output of outputList) {
           for (const channel of output) {
@@ -43,7 +53,7 @@ class Adsr extends AudioWorkletProcessor {
       for (const output of outputList) {
         for (const channel of output) {
           for (let i = 0; i < channel.length; i++) {
-            channel[i] = 0.01;
+            channel[i] = 0.0;
           }
         }
       }
@@ -54,15 +64,28 @@ class Adsr extends AudioWorkletProcessor {
   }
 
   // TODO: Implement sustain and release.
-  outputLevel(timeSinceTrigger, attack, decay, sustain, release) {
+  outputLevel(
+    timeSinceTrigger,
+    attack,
+    decay,
+    sustain,
+    release,
+    high,
+    timeSinceRelease
+  ) {
     if (timeSinceTrigger < 0) {
       return 0.0;
     } else if (timeSinceTrigger < attack) {
-      return Math.max(0.01, timeSinceTrigger / attack);
+      return timeSinceTrigger / attack;
     } else if (timeSinceTrigger < attack + decay) {
-      return Math.max(0.01, 1.0 - (timeSinceTrigger - attack) / decay);
+      return 1.0 - ((1.0 - sustain) * (timeSinceTrigger - attack)) / decay;
+    } else if (high) {
+      return sustain;
+    } else if (timeSinceRelease < release) {
+      return sustain * (1.0 - timeSinceRelease / release);
+    } else {
+      return 0.0;
     }
-    return 0.0;
   }
 
   // TODO: Set reasonable min and max param values.
@@ -84,7 +107,7 @@ class Adsr extends AudioWorkletProcessor {
       },
       {
         name: "sustain",
-        defaultValue: 0.5,
+        defaultValue: 0.2,
         minValue: 0,
         maxValue: 1,
         automationRate: "k-rate",

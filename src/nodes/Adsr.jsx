@@ -118,7 +118,7 @@ function createAudioNode(context, data) {
 const initialData = {
   attack: 0.06,
   decay: 0.25,
-  sustain: 0.5,
+  sustain: 0.2,
   release: 0.7,
 };
 
