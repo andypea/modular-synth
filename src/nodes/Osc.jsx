@@ -60,7 +60,7 @@ function createAudioNode(context, data) {
   return node;
 }
 
-const initialData = { frequency: 440, type: "sine" };
+const initialData = { frequency: 110, type: "sine" };
 
 export default {
   node: Node,

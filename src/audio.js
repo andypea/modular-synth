@@ -10,6 +10,8 @@ await context.audioWorklet.addModule(
 
 await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer.js");
 
+await context.audioWorklet.addModule("/audioWorkletProcessors/adsr.js");
+
 nodes.set("output", context.destination);
 
 export function isRunning() {

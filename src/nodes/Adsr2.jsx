@@ -8,9 +8,11 @@ const selector = (id) => (store) => ({
   setDecay: (e) => store.updateNode(id, { decay: +e.target.value }),
   setSustain: (e) => store.updateNode(id, { sustain: +e.target.value }),
   setRelease: (e) => store.updateNode(id, { release: +e.target.value }),
+  trigger: () => store.messageNode(id, { trigger: true }),
 });
 
 function Node({ id, data }) {
+  const { trigger } = useStore(selector(id));
   const { setDecay } = useStore(selector(id));
   const { setAttack } = useStore(selector(id));
   const { setSustain } = useStore(selector(id));
@@ -18,10 +20,12 @@ function Node({ id, data }) {
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
+      <Handle className={tw("w-3 h-3")} type="target" position="top" />
+
       <p
         className={tw("rounded-t-md px-2 py-1 bg-blue-500 text-white text-sm")}
       >
-        ADSR
+        ADSR 2
       </p>
 
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
@@ -86,27 +90,53 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>{data.release.toFixed(2)}</p>
       </label>
 
-      <Handle className={tw("w-3 h-3")} type="target" position="top" />
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <input
+          className="nodrag"
+          type="button"
+          value="Trigger"
+          onClick={trigger}
+        />
+      </label>
+
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
   );
 }
 
-// TODO: This should be in a seperate file.
+function trigger(context, node) {
+  const time = context.currentTime;
+
+  node.gain.cancelScheduledValues(time);
+  node.gain.setValueAtTime(0, time);
+  node.gain.linearRampToValueAtTime(1, time + node.attack);
+  node.gain.linearRampToValueAtTime(
+    node.sustain,
+    time + node.attack + node.decay
+  );
+  node.gain.linearRampToValueAtTime(
+    0,
+    time + node.attack + node.decay + node.release
+  );
+}
+
+function receiveMessage(message, context, node) {
+  if (message.trigger) {
+    trigger(context, node);
+  }
+}
+
 function createAudioNode(context, data) {
-  const node = new AudioWorkletNode(context, "adsr");
+  const node = context.createGain();
+  node.gain.value = 0;
+  node.attack = data.attack;
+  node.decay = data.decay;
+  node.sustain = data.sustain;
+  node.release = data.release;
 
-  node.attack = node.parameters.get("attack");
-  node.attack.value = data.attack;
-
-  node.decay = node.parameters.get("decay");
-  node.decay.value = data.decay;
-
-  node.sustain = node.parameters.get("sustain");
-  node.sustain.value = data.sustain;
-
-  node.release = node.parameters.get("release");
-  node.release.value = data.release;
+  node.receiveMessage = receiveMessage;
 
   return node;
 }
@@ -118,9 +148,9 @@ const initialData = {
   release: 0.7,
 };
 
-const key = "adsr";
+const key = "adsr2";
 
-const name = "ADSR";
+const name = "ADSR 2";
 
 export default {
   node: Node,

@@ -46,7 +46,7 @@ const key = "seq";
 const name = "Sequencer";
 function createAudioNode(context, data) {
   const node = new AudioWorkletNode(context, "sequencer");
-  for (let i = 1; i < 16; i++) {
+  for (let i = 1; i <= 16; i++) {
     const parameterName = `note${i}`;
     node[parameterName] = node.parameters.get(parameterName);
     node[parameterName].value = data[parameterName];
