@@ -9,6 +9,8 @@ import { default as RNP } from "./RNP";
 import { default as Clk } from "./Clk";
 import { default as Seq } from "./Seq";
 import { default as Gain } from "./Gain";
+import { default as BiquadFilter } from "./BiquadFilter";
+import { default as ConstantSource } from "./ConstantSource";
 
 // TODO: Set the keys here, not in the modules?
 export default new Map([
@@ -23,4 +25,6 @@ export default new Map([
   [Clk.key, Clk],
   [Seq.key, Seq],
   [Gain.key, Gain],
+  [BiquadFilter.key, BiquadFilter],
+  [ConstantSource.key, ConstantSource],
 ]);

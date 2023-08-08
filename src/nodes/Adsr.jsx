@@ -94,7 +94,11 @@ function Node({ id, data }) {
 
 // TODO: This should be in a seperate file.
 function createAudioNode(context, data) {
-  const node = new AudioWorkletNode(context, "adsr");
+  const node = new AudioWorkletNode(context, "adsr", {
+    numberOfInputs: 1,
+    numberOfOutputs: 1,
+    outputChannelCount: [1],
+  });
 
   node.attack = node.parameters.get("attack");
   node.attack.value = data.attack;

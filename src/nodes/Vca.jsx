@@ -41,7 +41,10 @@ const name = "VCA";
 const initialData = {};
 
 function createAudioNode(context, data) {
-  const node = context.createGain();
+  const node = new GainNode(context, {
+    channelCountMode: "explicit",
+    channelCount: 1,
+  });
   node.gain.value = 0.0;
 
   return node;

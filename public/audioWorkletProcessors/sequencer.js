@@ -31,7 +31,7 @@ class Sequencer extends AudioWorkletProcessor {
     let outputValue = 0.0;
 
     // TODO: Handle multiple channels and outputs correctly.
-
+    // TODO: Don't block output if inputChannel is not defined!?
     if (inputChannel) {
       for (let i = 0; i < inputChannel.length; i++) {
         if (!this.high && inputChannel[i] > 0.5) {

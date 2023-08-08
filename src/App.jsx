@@ -74,7 +74,7 @@ export default function App() {
               Reset
             </button>
           </Panel>
-          <Panel className={tw("space-x-4")} position="top-right">
+          <Panel className={tw("space-x-4")} position="bottom-right">
             {[...availableNodes.entries()].map(([key, value]) => (
               <button
                 key={key}

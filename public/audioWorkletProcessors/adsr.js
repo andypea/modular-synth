@@ -9,7 +9,11 @@ class Adsr extends AudioWorkletProcessor {
     const trigger = inputList[0][0];
     const timePerFrame = 1.0 / sampleRate;
 
+    // TODO: Iterating through output might be much more efficient.
     if (trigger) {
+      if (trigger.length != outputList[0][0].length) {
+        console.log(trigger.length, outputList[0][0].length);
+      }
       for (let i = 0; i < trigger.length; i++) {
         if (!this.high && trigger[i] > 0.5) {
           this.high = true;
@@ -29,10 +33,17 @@ class Adsr extends AudioWorkletProcessor {
         if (this.timeSinceTrigger >= 0.0) {
           this.timeSinceTrigger += timePerFrame;
         }
-
         for (const output of outputList) {
           for (const channel of output) {
             channel[i] = outputLevelValue;
+          }
+        }
+      }
+    } else {
+      for (const output of outputList) {
+        for (const channel of output) {
+          for (let i = 0; i < channel.length; i++) {
+            channel[i] = 0.01;
           }
         }
       }
@@ -47,10 +58,11 @@ class Adsr extends AudioWorkletProcessor {
     if (timeSinceTrigger < 0) {
       return 0.0;
     } else if (timeSinceTrigger < attack) {
-      return timeSinceTrigger / attack;
+      return Math.max(0.01, timeSinceTrigger / attack);
     } else if (timeSinceTrigger < attack + decay) {
-      return 1.0 - (timeSinceTrigger - attack) / decay;
+      return Math.max(0.01, 1.0 - (timeSinceTrigger - attack) / decay);
     }
+    return 0.0;
   }
 
   // TODO: Set reasonable min and max param values.

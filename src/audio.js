@@ -12,7 +12,10 @@ await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer.js");
 
 await context.audioWorklet.addModule("/audioWorkletProcessors/adsr.js");
 
-nodes.set("output", context.destination);
+const outputMixer = context.createGain();
+outputMixer.connect(context.destination);
+
+nodes.set("output", outputMixer);
 
 export function isRunning() {
   return context.state === "running";
