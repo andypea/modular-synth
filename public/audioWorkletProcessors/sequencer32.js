@@ -2,12 +2,12 @@
 const numNotes = 32;
 
 class Sequencer extends AudioWorkletProcessor {
-  constructor(hold = false) {
+  constructor() {
     super();
 
     this.high = false;
     this.currentNote = 0;
-    this.hold = hold;
+    this.outputValue = 0.0;
   }
 
   process(inputList, outputList, parameters) {
@@ -18,8 +18,6 @@ class Sequencer extends AudioWorkletProcessor {
       notes[i] = parameters[`note${i + 1}`];
     }
 
-    let outputValue = 0.0;
-
     // TODO: Handle multiple channels and outputs correctly.
     // TODO: Don't block output if inputChannel is not defined!?
     if (inputChannel) {
@@ -27,7 +25,7 @@ class Sequencer extends AudioWorkletProcessor {
         if (!this.high && inputChannel[i] > 0.5) {
           this.high = true;
           this.currentNote = (this.currentNote + 1) % numNotes;
-          outputValue =
+          this.outputValue =
             notes[this.currentNote].length === 1
               ? notes[this.currentNote][0]
               : notes[this.currentNote][i];
@@ -37,12 +35,10 @@ class Sequencer extends AudioWorkletProcessor {
 
         for (const output of outputList) {
           for (const outputChannel of output) {
-            outputChannel[i] = outputValue;
+            outputChannel[i] = this.outputValue;
           }
         }
-        if (!this.hold) {
-          outputValue = 0.0;
-        }
+        //outputValue = 0.0;
       }
     }
 
