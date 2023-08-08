@@ -3,9 +3,12 @@ import availableNodes from "./nodes/nodes";
 export const context = new AudioContext();
 const nodes = new Map();
 
+// TODO: This should probably be done in the node.
 await context.audioWorklet.addModule(
   "/audioWorkletProcessors/random-noise-processor.js"
 );
+
+await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer.js");
 
 nodes.set("output", context.destination);
 

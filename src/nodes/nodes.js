@@ -5,7 +5,9 @@ import { default as Vco } from "./Vco";
 import { default as BiOsc } from "./BiOsc";
 import { default as RNP } from "./RNP";
 import { default as Clk } from "./Clk";
+import { default as Seq } from "./Seq";
 
+// TODO: Set the keys here, not in the modules?
 export default new Map([
   [Adsr.key, Adsr],
   [Osc.key, Osc],
@@ -14,4 +16,5 @@ export default new Map([
   [BiOsc.key, BiOsc],
   [RNP.key, RNP],
   [Clk.key, Clk],
+  [Seq.key, Seq],
 ]);
