@@ -20,6 +20,7 @@ export function toggleAudio() {
 export function createAudioNode(id, type, data) {
   const node = availableNodes.get(type).createAudioNode(context, data);
   nodes.set(id, node);
+  return node;
 }
 
 export function updateAudioNode(id, data) {

@@ -23,7 +23,6 @@ export const useStore = createWithEqualityFn(
     nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
     edges: [],
     isRunning: isRunning(),
-    context: context,
 
     toggleAudio() {
       toggleAudio().then(() => {
@@ -40,9 +39,17 @@ export const useStore = createWithEqualityFn(
     createNode(type, x = 0, y = 0, id) {
       id = id ?? nanoid();
 
-      const data = structuredClone(availableNodes.get(type).initialData);
+      const initialData = availableNodes.get(type).initialData;
+
+      // TODO: Would it be better to refactor, so that this check can be avoided.
+      const data =
+        typeof initialData === "function"
+          ? structuredClone(initialData(context))
+          : structuredClone(initialData);
       const position = { x: x, y: y };
-      createAudioNode(id, type, data);
+      // TODO: This probably shouldn't be part of the state.
+      const node = createAudioNode(id, type, data);
+      data.audioNode = node;
       set({ nodes: [...get().nodes, { id, type, data, position }] });
     },
 

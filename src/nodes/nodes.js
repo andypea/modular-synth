@@ -4,7 +4,7 @@ import { default as Amp } from "./Amp";
 import { default as Vco } from "./Vco";
 import { default as BiOsc } from "./BiOsc";
 import { default as RNP } from "./RNP";
-import { default as Seq } from "./Seq";
+import { default as Clk } from "./Clk";
 
 export default new Map([
   [Adsr.key, Adsr],
@@ -13,5 +13,5 @@ export default new Map([
   [Vco.key, Vco],
   [BiOsc.key, BiOsc],
   [RNP.key, RNP],
-  [Seq.key, Seq],
+  [Clk.key, Clk],
 ]);
