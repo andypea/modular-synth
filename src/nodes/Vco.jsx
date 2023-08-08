@@ -32,7 +32,7 @@ function Node({ id, data }) {
         className={tw("w-3 h-3")}
         type="target"
         position="top"
-        id="frequency"
+        id="frequencyInput"
       />
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
@@ -46,10 +46,15 @@ const initialData = { type: "sine" };
 
 function createAudioNode(context, data) {
   const node = context.createOscillator();
-  node.frequency.value = 440;
   node.type = data.type;
-  node.nodeType = "vco";
   node.start();
+
+  const frequencyInput = context.createGain();
+  frequencyInput.gain.value = 440.0;
+  frequencyInput.connect(node.frequency);
+  node.frequencyInput = frequencyInput;
+
+  node.frequency.value = 0.0;
 
   return node;
 }

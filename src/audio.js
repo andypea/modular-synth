@@ -8,7 +8,9 @@ await context.audioWorklet.addModule(
   "/audioWorkletProcessors/random-noise-processor.js"
 );
 
-await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer.js");
+await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer32.js");
+
+await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer64.js");
 
 await context.audioWorklet.addModule("/audioWorkletProcessors/adsr.js");
 

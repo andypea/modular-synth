@@ -5,7 +5,8 @@ import { default as Vca } from "./Vca";
 import { default as BiOsc } from "./BiOsc";
 import { default as RNP } from "./RNP";
 import { default as Clk } from "./Clk";
-import { default as Seq } from "./Seq";
+import { default as DrumSequencer } from "./DrumSequencer";
+import { default as LeadSequencer } from "./LeadSequencer";
 import { default as Gain } from "./Gain";
 import { default as BiquadFilter } from "./BiquadFilter";
 import { default as ConstantSource } from "./ConstantSource";
@@ -20,7 +21,8 @@ export default new Map([
   [BiOsc.key, BiOsc],
   [RNP.key, RNP],
   [Clk.key, Clk],
-  [Seq.key, Seq],
+  [DrumSequencer.key, DrumSequencer],
+  [LeadSequencer.key, LeadSequencer],
   [Gain.key, Gain],
   [BiquadFilter.key, BiquadFilter],
   [ConstantSource.key, ConstantSource],
