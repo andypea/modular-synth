@@ -3,6 +3,9 @@ import { Handle } from "reactflow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
+const leftHandleStyle = { left: "10%" };
+const rightHandleStyle = { left: "90%" };
+
 const selector = (id) => (store) => ({
   setAttack: (e) => store.updateNode(id, { attack: +e.target.value }),
   setDecay: (e) => store.updateNode(id, { decay: +e.target.value }),
@@ -86,7 +89,20 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>{data.release.toFixed(2)}</p>
       </label>
 
-      <Handle className={tw("w-3 h-3")} type="target" position="top" />
+      <Handle
+        className={tw("w-3 h-3")}
+        type="target"
+        position="top"
+        id="gate"
+        style={leftHandleStyle}
+      />
+      <Handle
+        className={tw("w-3 h-3")}
+        type="target"
+        position="top"
+        id="reTrigger"
+        style={rightHandleStyle}
+      />
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
   );
@@ -94,11 +110,7 @@ function Node({ id, data }) {
 
 // TODO: This should be in a seperate file.
 function createAudioNode(context, data) {
-  const node = new AudioWorkletNode(context, "adsr", {
-    numberOfInputs: 1,
-    numberOfOutputs: 1,
-    outputChannelCount: [1],
-  });
+  const node = new AudioWorkletNode(context, "adsr", { numberOfInputs: 2 });
 
   node.attack = node.parameters.get("attack");
   node.attack.value = data.attack;
@@ -111,6 +123,12 @@ function createAudioNode(context, data) {
 
   node.release = node.parameters.get("release");
   node.release.value = data.release;
+
+  node.gate = new GainNode(context);
+  node.gate.connect(node, 0, 0);
+
+  node.reTrigger = new GainNode(context);
+  node.reTrigger.connect(node, 0, 1);
 
   return node;
 }

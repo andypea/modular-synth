@@ -38,7 +38,7 @@ class Sequencer extends AudioWorkletProcessor {
             outputChannel[i] = outputValue;
           }
         }
-        outputValue = 0.0;
+        //outputValue = 0.0;
       }
     }
 

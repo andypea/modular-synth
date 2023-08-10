@@ -1,91 +1,64 @@
-class Adsr extends AudioWorkletProcessor {
+export default class Adsr extends AudioWorkletProcessor {
   constructor() {
     super();
-    this.timeSinceTrigger = -1.0;
-    this.timeSinceRelease = -1.0;
-    this.high = false;
+    this.triggerFrame = -1;
+    this.releaseFrame = -1;
+    this.gateHigh = false;
+    this.reTriggerHigh = false;
+    this.threshold = 0.5;
   }
 
-  process(inputList, outputList, parameters) {
-    const trigger = inputList[0][0];
-    const timePerFrame = 1.0 / sampleRate;
+  process([[gate], [reTrigger]], outputList, parameters) {
+    const blockSize =
+      gate?.length ?? reTrigger?.length ?? outputList[0]?.[0]?.length ?? 0;
 
-    // TODO: Iterating through output might be much more efficient.
-    if (trigger) {
-      if (trigger.length != outputList[0][0].length) {
-        console.log(trigger.length, outputList[0][0].length);
+    const attackFrames = parameters.attack[0] * sampleRate;
+    const decayFrames = parameters.decay[0] * sampleRate;
+    const releaseFrames = parameters.release[0] * sampleRate;
+
+    for (let i = 0; i < blockSize; i++) {
+      const frameNumber = currentFrame + i;
+      const gateValue = gate?.[i] ?? 0.0;
+      const reTriggerValue = reTrigger?.[i] ?? 0.0;
+
+      if (
+        (!this.gateHigh && gateValue > this.threshold) ||
+        (!this.reTriggerHigh && reTriggerValue > this.threshold)
+      ) {
+        this.triggerFrame = frameNumber;
+        this.releaseFrame = frameNumber + attackFrames + decayFrames;
       }
-      for (let i = 0; i < trigger.length; i++) {
-        if (!this.high && trigger[i] > 0.5) {
-          this.high = true;
-          this.timeSinceTrigger = 0.0;
-        } else if (this.high && trigger[i] < 0.5) {
-          this.high = false;
-          this.timeSinceRelease = 0.0;
-        }
 
-        const outputLevelValue = this.outputLevel(
-          this.timeSinceTrigger,
-          parameters.attack[0],
-          parameters.decay[0],
-          parameters.sustain[0],
-          parameters.release[0],
-          this.high,
-          this.timeSinceRelease
-        );
-
-        if (this.timeSinceTrigger >= 0.0) {
-          this.timeSinceTrigger += timePerFrame;
-        }
-        if (
-          this.timeSinceRelease >= 0.0 &&
-          this.timeSinceTrigger > parameters.attack[0] + parameters.decay[0]
-        ) {
-          this.timeSinceRelease += timePerFrame;
-        }
-        for (const output of outputList) {
-          for (const channel of output) {
-            channel[i] = outputLevelValue;
-          }
-        }
+      if (
+        this.gateHigh &&
+        gateValue < this.threshold &&
+        frameNumber > frameNumber + attackFrames + decayFrames
+      ) {
+        this.releaseFrame = frameNumber;
       }
-    } else {
+
+      this.gateHigh = gateValue > 0.5;
+      this.reTriggerHigh = reTrigger > 0.5;
+
+      const outputValue = calcOutputValue(
+        frameNumber,
+        this.gateHigh,
+        this.triggerFrame,
+        this.releaseFrame,
+        attackFrames,
+        decayFrames,
+        parameters.sustain[0],
+        releaseFrames
+      );
       for (const output of outputList) {
         for (const channel of output) {
-          for (let i = 0; i < channel.length; i++) {
-            channel[i] = 0.0;
-          }
+          channel[i] = outputValue;
         }
       }
     }
 
     // TODO: This could lead to memory leaks!
     return true;
-  }
-
-  // TODO: Implement sustain and release.
-  outputLevel(
-    timeSinceTrigger,
-    attack,
-    decay,
-    sustain,
-    release,
-    high,
-    timeSinceRelease
-  ) {
-    if (timeSinceTrigger < 0) {
-      return 0.0;
-    } else if (timeSinceTrigger < attack) {
-      return timeSinceTrigger / attack;
-    } else if (timeSinceTrigger < attack + decay) {
-      return 1.0 - ((1.0 - sustain) * (timeSinceTrigger - attack)) / decay;
-    } else if (high) {
-      return sustain;
-    } else if (timeSinceRelease < release) {
-      return sustain * (1.0 - timeSinceRelease / release);
-    } else {
-      return 0.0;
-    }
   }
 
   // TODO: Set reasonable min and max param values.
@@ -123,5 +96,33 @@ class Adsr extends AudioWorkletProcessor {
   }
 }
 
-// define the customGain parameter used in process method
+function calcOutputValue(
+  frameNum,
+  gateHigh,
+  triggerFrameNum,
+  releaseFrameNum,
+  attackFrames,
+  decayFrames,
+  sustain,
+  releaseFrames
+) {
+  if (triggerFrameNum < 0) {
+    return 0.0;
+  } else if (frameNum < triggerFrameNum + attackFrames) {
+    return (frameNum - triggerFrameNum) / attackFrames;
+  } else if (frameNum < triggerFrameNum + attackFrames + decayFrames) {
+    return (
+      1.0 -
+      ((1.0 - sustain) * (frameNum - (triggerFrameNum + attackFrames))) /
+        decayFrames
+    );
+  } else if (gateHigh) {
+    return sustain;
+  } else if (frameNum < releaseFrameNum + releaseFrames) {
+    return sustain * (1.0 - (frameNum - releaseFrameNum) / releaseFrames);
+  } else {
+    return 0.0;
+  }
+}
+
 registerProcessor("adsr", Adsr);
