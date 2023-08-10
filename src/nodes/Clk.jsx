@@ -5,10 +5,11 @@ import { useStore } from "../store";
 
 const selector = (id) => (store) => ({
   setTempo: (e) => store.updateNode(id, { tempo: +e.target.value }),
+  setGateLength: (e) => store.updateNode(id, { gateLength: +e.target.value }),
 });
 
 function Node({ id, data }) {
-  const { setTempo } = useStore(selector(id));
+  const { setTempo, setGateLength } = useStore(selector(id));
 
   useEffect(() => {
     let frameId = null;
@@ -53,6 +54,22 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>{data.tempo} bpm</p>
       </label>
 
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Gate Length</p>
+        <input
+          className="nodrag"
+          type="range"
+          min="0.05"
+          max="1"
+          step="0.05"
+          value={data.gateLength}
+          onChange={setGateLength}
+        />
+        <p className={tw("text-right text-xs")}>{data.gateLength} s</p>
+      </label>
+
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
   );
@@ -66,7 +83,6 @@ function createAudioNode(context, data) {
   const schedulerInterval = 25; // ms
   const scheduleAheadTime = 0.1; // s
   let nextNoteTime = context.currentTime;
-  let noteLength = 0.05; // s
 
   const node = context.createConstantSource();
   node.offset.value = 0.0;
@@ -84,8 +100,9 @@ function createAudioNode(context, data) {
   }
 
   function scheduleNote(time) {
+    node.offset.cancelScheduledValues(time);
     node.offset.setValueAtTime(1.0, time);
-    node.offset.setValueAtTime(0.0, time + noteLength);
+    node.offset.setValueAtTime(0.0, time + data.gateLength);
   }
 
   function nextNote() {
@@ -102,6 +119,7 @@ function createAudioNode(context, data) {
 
 const initialData = (context) => ({
   tempo: 120,
+  gateLength: 0.05, // s
 });
 
 export default {
