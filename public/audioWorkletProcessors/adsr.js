@@ -1,11 +1,18 @@
 export default class Adsr extends AudioWorkletProcessor {
-  constructor() {
+  constructor({ processorOptions } = {}) {
     super();
+
+    // Settings
+    this.threshold = processorOptions?.threshold ?? 0.5;
+    // TODO: This should depend on the sampleRate
+    this.maxChange = processorOptions?.maxChange ?? 0.001;
+
+    // State
     this.triggerFrame = -1;
     this.releaseFrame = -1;
     this.gateHigh = false;
     this.reTriggerHigh = false;
-    this.threshold = 0.5;
+    this.previousOutputValue = 0.0;
   }
 
   process([[gate], [reTrigger]], outputList, parameters) {
@@ -38,9 +45,9 @@ export default class Adsr extends AudioWorkletProcessor {
       }
 
       this.gateHigh = gateValue > 0.5;
-      this.reTriggerHigh = reTrigger > 0.5;
+      this.reTriggerHigh = reTriggerValue > 0.5;
 
-      const outputValue = calcOutputValue(
+      const targetOutputValue = calcOutputValue(
         frameNumber,
         this.gateHigh,
         this.triggerFrame,
@@ -50,6 +57,17 @@ export default class Adsr extends AudioWorkletProcessor {
         parameters.sustain[0],
         releaseFrames
       );
+
+      const targetOutputChange = targetOutputValue - this.previousOutputValue;
+
+      const outputValue =
+        Math.abs(targetOutputChange) > this.maxChange
+          ? this.previousOutputValue +
+            Math.sign(targetOutputChange) * this.maxChange
+          : targetOutputValue;
+
+      this.previousOutputValue = outputValue;
+
       for (const output of outputList) {
         for (const channel of output) {
           channel[i] = outputValue;

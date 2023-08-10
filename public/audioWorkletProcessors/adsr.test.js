@@ -28,7 +28,7 @@ describe("AdsrTests", () => {
   });
 
   test("Adsr is correct for a simple example", () => {
-    const adsr = new Adsr();
+    const adsr = new Adsr({ processorOptions: { maxChange: 1.0 } });
     const gateChannel = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
     const outputChannel = new Array(10).fill(0.0);
     const parameters = {
