@@ -11,6 +11,8 @@ import { default as Gain } from "./Gain";
 import { default as BiquadFilter } from "./BiquadFilter";
 import { default as ConstantSource } from "./ConstantSource";
 import { default as TriggerButton } from "./TriggerButton";
+import { default as VoltToCents } from "./VoltToCents";
+import { default as Fader } from "./Fader";
 
 // TODO: Set the keys here, not in the modules?
 export default new Map([
@@ -27,4 +29,6 @@ export default new Map([
   [BiquadFilter.key, BiquadFilter],
   [ConstantSource.key, ConstantSource],
   [TriggerButton.key, TriggerButton],
+  [VoltToCents.key, VoltToCents],
+  [Fader.key, Fader],
 ]);

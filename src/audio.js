@@ -7,12 +7,10 @@ const nodes = new Map();
 await context.audioWorklet.addModule(
   "/audioWorkletProcessors/random-noise-processor.js"
 );
-
 await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer32.js");
-
 await context.audioWorklet.addModule("/audioWorkletProcessors/sequencer64.js");
-
 await context.audioWorklet.addModule("/audioWorkletProcessors/adsr.js");
+await context.audioWorklet.addModule("/audioWorkletProcessors/voltToCents.js");
 
 const outputMixer = context.createGain();
 outputMixer.connect(context.destination);

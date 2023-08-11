@@ -32,7 +32,7 @@ function Node({ id, data }) {
         className={tw("w-3 h-3")}
         type="target"
         position="top"
-        id="frequencyInput"
+        id="detune"
       />
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
     </div>
@@ -49,12 +49,7 @@ function createAudioNode(context, data) {
   node.type = data.type;
   node.start();
 
-  const frequencyInput = context.createGain();
-  frequencyInput.gain.value = 440.0;
-  frequencyInput.connect(node.frequency);
-  node.frequencyInput = frequencyInput;
-
-  node.frequency.value = 0.0;
+  //node.frequency.setValueAtTime(261.6256, 0);
 
   return node;
 }
