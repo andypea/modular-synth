@@ -35,6 +35,7 @@ function Node({ id, data }) {
                   <input
                     style={{
                       appearance: "slider-vertical",
+                      height: "8em",
                       accentColor: j === data.currentNote ? "red" : "black",
                     }}
                     className="nodrag"
@@ -46,6 +47,7 @@ function Node({ id, data }) {
                     type="range"
                     value={data[`note${j}`]}
                     onChange={setNote(j)}
+                    list="markers"
                   />
                 ))}
             </div>
@@ -56,6 +58,21 @@ function Node({ id, data }) {
       <label className={tw("flex flex-col px-2 py-1")}></label>
 
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
+      <datalist id="markers">
+        <option value="0"></option>
+        <option value="100"></option>
+        <option value="200"></option>
+        <option value="300"></option>
+        <option value="400"></option>
+        <option value="500"></option>
+        <option value="600"></option>
+        <option value="700"></option>
+        <option value="800"></option>
+        <option value="900"></option>
+        <option value="1000"></option>
+        <option value="1100"></option>
+        <option value="1200"></option>
+      </datalist>
     </div>
   );
 }
