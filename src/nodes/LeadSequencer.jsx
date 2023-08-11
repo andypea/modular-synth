@@ -33,13 +33,16 @@ function Node({ id, data }) {
                 .map((j) => (i * numNotes) / numRows + j + 1)
                 .map((j) => (
                   <input
-                    style={{ appearance: "slider-vertical" }}
+                    style={{
+                      appearance: "slider-vertical",
+                      accentColor: j === data.currentNote ? "red" : "black",
+                    }}
                     className="nodrag"
                     orient="vertical"
                     key={j}
-                    min={-1}
-                    max={1}
-                    step={0.01}
+                    min={0}
+                    max={1200}
+                    step={100}
                     type="range"
                     value={data[`note${j}`]}
                     onChange={setNote(j)}
@@ -59,23 +62,28 @@ function Node({ id, data }) {
 
 const key = "leadSequencer";
 const name = "Lead Sequencer";
-function createAudioNode(context, data) {
+function createAudioNode(context, data, id) {
   const node = new AudioWorkletNode(context, "sequencer32", { hold: true });
   for (let i = 1; i <= numNotes; i++) {
     const parameterName = `note${i}`;
     node[parameterName] = node.parameters.get(parameterName);
     node[parameterName].value = data[parameterName];
   }
+  node.currentNote = 1;
+  node.port.onmessage = (message) => {
+    useStore.getState().updateNode(id, { currentNote: message.data });
+  };
+
   return node;
 }
 
-const initialData = {};
+const initialData = {
+  currentNote: 1,
+};
 
 for (let i = 1; i <= numNotes; i++) {
-  initialData[`note${i}`] = 0.0;
+  initialData[`note${i}`] = 1;
 }
-
-initialData["note1"] = 1.0;
 
 export default {
   node: Node,

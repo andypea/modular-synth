@@ -25,6 +25,7 @@ class Sequencer extends AudioWorkletProcessor {
         if (!this.high && inputChannel[i] > 0.5) {
           this.high = true;
           this.currentNote = (this.currentNote + 1) % numNotes;
+          this.port.postMessage(this.currentNote);
           this.outputValue =
             notes[this.currentNote].length === 1
               ? notes[this.currentNote][0]

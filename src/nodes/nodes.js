@@ -10,6 +10,7 @@ import { default as LeadSequencer } from "./LeadSequencer";
 import { default as Gain } from "./Gain";
 import { default as BiquadFilter } from "./BiquadFilter";
 import { default as ConstantSource } from "./ConstantSource";
+import { default as TunedConstantSource } from "./TunedConstantSource";
 import { default as TriggerButton } from "./TriggerButton";
 import { default as VoltToCents } from "./VoltToCents";
 import { default as Fader } from "./Fader";
@@ -29,6 +30,7 @@ export default new Map([
   [Gain.key, Gain],
   [BiquadFilter.key, BiquadFilter],
   [ConstantSource.key, ConstantSource],
+  [TunedConstantSource.key, TunedConstantSource],
   [TriggerButton.key, TriggerButton],
   [VoltToCents.key, VoltToCents],
   [Fader.key, Fader],
