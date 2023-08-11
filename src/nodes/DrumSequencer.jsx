@@ -33,6 +33,9 @@ function Node({ id, data }) {
                 .map((j) => (i * numNotes) / numRows + j + 1)
                 .map((j) => (
                   <input
+                    style={{
+                      accentColor: j === data.currentNote ? "red" : "black",
+                    }}
                     key={j}
                     type="checkbox"
                     checked={data[`note${j}`]}
@@ -53,17 +56,22 @@ function Node({ id, data }) {
 
 const key = "drumSequencer";
 const name = "Drum Sequencer";
-function createAudioNode(context, data) {
+function createAudioNode(context, data, id) {
   const node = new AudioWorkletNode(context, "sequencer64");
   for (let i = 1; i <= numNotes; i++) {
     const parameterName = `note${i}`;
     node[parameterName] = node.parameters.get(parameterName);
     node[parameterName].value = data[parameterName];
   }
+  node.port.onmessage = (message) => {
+    useStore.getState().updateNode(id, { currentNote: message.data });
+  };
   return node;
 }
 
-const initialData = {};
+const initialData = {
+  currentNote: 1,
+};
 
 for (let i = 1; i <= numNotes; i++) {
   initialData[`note${i}`] = 0.0;

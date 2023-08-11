@@ -69,7 +69,6 @@ function createAudioNode(context, data, id) {
     node[parameterName] = node.parameters.get(parameterName);
     node[parameterName].value = data[parameterName];
   }
-  node.currentNote = 1;
   node.port.onmessage = (message) => {
     useStore.getState().updateNode(id, { currentNote: message.data });
   };
