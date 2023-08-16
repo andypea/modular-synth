@@ -48,7 +48,9 @@ function Component({ id, data }) {
 
       <label className={tw("flex flex-col px-2 pt-1 pb-2")}>
         <p className={tw("text-xs font-bold mb-2")}>Status</p>
-        <IndicatorLight on={on} />
+        <div className={tw("m-auto")}>
+          <IndicatorLight on={on} />
+        </div>
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
