@@ -1,5 +1,5 @@
 import { availableNodes, addModules } from "./nodes/nodes";
-import { patchAudioNodeConnect } from "./nodes/CompositeAudioNode/CompositeAudioNode";
+import { patchAudioNodeConnect } from "./nodes/Utils/CompositeAudioNode";
 
 export const context = new AudioContext();
 await addModules(context);

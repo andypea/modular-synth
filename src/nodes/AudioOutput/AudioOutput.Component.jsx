@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Handle } from "../UtilityComponents/Handle";
+import { Handle } from "../Utils/Handle";
 import { useStore } from "../../store";
 import { tw } from "twind";
 

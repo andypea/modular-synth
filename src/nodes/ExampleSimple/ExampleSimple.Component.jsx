@@ -1,5 +1,5 @@
 import React from "react";
-import { Handle } from "../UtilityComponents/Handle";
+import { Handle } from "../Utils/Handle";
 import { tw } from "twind";
 import { useStore } from "../../store";
 
@@ -20,7 +20,7 @@ function Node({ id, data }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
-        OscillatorNode
+        Example Simple
       </p>
 
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
@@ -98,8 +98,8 @@ function Node({ id, data }) {
   );
 }
 
-const key = "oscillatorNode";
-const name = "OscillatorNode";
+const key = "exampleSimple";
+const name = "Example Simple";
 
 function createAudioNode(context, data) {
   const node = new OscillatorNode(context, data);

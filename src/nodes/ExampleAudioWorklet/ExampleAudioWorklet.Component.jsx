@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Handle } from "../UtilityComponents/Handle";
+import { Handle } from "../Utils/Handle";
 import { useStore } from "../../store";
 import { ExampleAudioWorkletNode } from "./ExampleAudioWorklet.Node";
-import { IndicatorLight } from "../UtilityComponents/IndicatorLight";
+import { IndicatorLight } from "../Utils/IndicatorLight";
 import { tw } from "twind";
 
 const selector = (id) => (store) => ({

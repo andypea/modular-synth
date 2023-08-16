@@ -1,4 +1,4 @@
-import { CompositeAudioNode } from "./CompositeAudioNode";
+import { CompositeAudioNode } from "../Utils/CompositeAudioNode";
 
 export class ExampleCompositeNode extends CompositeAudioNode {
   get gain() {

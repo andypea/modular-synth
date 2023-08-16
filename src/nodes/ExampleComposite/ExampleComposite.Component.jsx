@@ -1,5 +1,5 @@
 import React from "react";
-import { Handle } from "../UtilityComponents/Handle";
+import { Handle } from "../Utils/Handle";
 import { tw } from "twind";
 import { useStore } from "../../store";
 import { ExampleCompositeNode } from "./ExampleComposite.Node";
@@ -28,8 +28,8 @@ function Node({ id, data }) {
   );
 }
 
-const key = "exampleCompositeNode";
-const name = "Example Composite Node";
+const key = "exampleComposite";
+const name = "Example Composite";
 
 function createAudioNode(context, data) {
   const node = new ExampleCompositeNode(context, data);
