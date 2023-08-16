@@ -4,6 +4,7 @@ import { patchAudioNodeConnect } from "./nodes/CompositeAudioNode/CompositeAudio
 export const context = new AudioContext();
 await addModules(context);
 patchAudioNodeConnect();
+context.suspend();
 
 const nodes = new Map();
 
