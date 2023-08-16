@@ -4,6 +4,7 @@ import { tw } from "twind";
 import { useStore } from "../../store";
 
 // TODO: Add support for setPeriodicWave.
+// TODO: Support proper handle layouts.
 
 const selector = (id) => (store) => ({
   setFrequency: (e) => store.updateNode(id, { frequency: +e.target.value }),
@@ -48,6 +49,13 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>
           {data.frequency.toFixed(0)} Hz
         </p>
+        <Handle
+          className={tw("w-3 h-3")}
+          type="target"
+          id="frequency"
+          position="left"
+          style={{ top: "57%" }}
+        />
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
@@ -66,6 +74,13 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>
           {data.detune.toFixed(0)} cents
         </p>
+        <Handle
+          className={tw("w-3 h-3")}
+          type="target"
+          id="detune"
+          position="left"
+          style={{ top: "87%" }}
+        />
       </label>
 
       <Handle className={tw("w-3 h-3")} type="source" position="bottom" />

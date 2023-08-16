@@ -18,6 +18,7 @@ import { default as Mute } from "./Mute";
 import { default as ExampleAudioWorklet } from "./ExampleAudioWorklet/ExampleAudioWorklet.Component";
 import exampleWorkletProcessorUrl from "./ExampleAudioWorklet/ExampleAudioWorklet.Processor.js?url";
 import { default as OscillatorNode } from "./WebAudioNodes/OscillatorNode.Component";
+import { default as ExampleComposite } from "./CompositeAudioNode/ExampleComposite.Component";
 
 // TODO: Set the keys here, not in the modules?
 export const availableNodes = new Map([
@@ -40,6 +41,7 @@ export const availableNodes = new Map([
   [Fader.key, Fader],
   [Mute.key, Mute],
   [ExampleAudioWorklet.key, ExampleAudioWorklet],
+  [ExampleComposite.key, ExampleComposite],
 ]);
 
 export async function addModules(context) {

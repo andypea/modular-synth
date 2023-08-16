@@ -11,7 +11,7 @@ const selector = (id) => (store) => ({
   setNoiseType: (e) => store.updateNode(id, { noiseType: e.target.value }),
 });
 
-function Node({ id, data }) {
+function Component({ id, data }) {
   const { setVolume, setInterval, setNoiseType } = useStore(selector(id));
   const [on, setOn] = useState(true);
 
@@ -105,14 +105,13 @@ const key = "exampleAudioWorklet";
 const name = "Example Audio Worklet";
 
 function createAudioNode(context, data) {
-  const node = new ExampleAudioWorkletNode(context, data);
-  return node;
+  return new ExampleAudioWorkletNode(context, data);
 }
 
 const initialData = { volume: 0.01, noiseType: "brown", interval: 1.0 };
 
 export default {
-  node: Node,
+  node: Component,
   key: key,
   createAudioNode: createAudioNode,
   name: name,
