@@ -81,3 +81,11 @@ button:focus-visible {
 .indicator-light.on {
   background: #fff700;
 }
+
+.react-flow__handle {
+  position: relative;
+}
+
+.react-flow__node {
+  z-index: -1 !important;
+}
