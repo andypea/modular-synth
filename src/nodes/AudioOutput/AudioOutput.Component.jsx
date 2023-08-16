@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Handle } from "./UtilityComponents/Handle";
-import { useStore } from "../store";
+import { Handle } from "../UtilityComponents/Handle";
+import { useStore } from "../../store";
 import { tw } from "twind";
 
 const selector = (store) => ({
   toggleAudio: store.toggleAudio,
 });
 
-export default function Out({ id, data }) {
+function Node({ id, data }) {
   const { toggleAudio } = useStore(selector);
 
   const [isRunning, setIsRunning] = useState(false);
@@ -42,7 +42,7 @@ export default function Out({ id, data }) {
           "rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm position-self-center"
         )}
       >
-        Destination
+        Audio Output
       </p>
 
       <label className={tw("flex flex-col px-2 py-1")}>
@@ -67,3 +67,26 @@ export default function Out({ id, data }) {
     </div>
   );
 }
+
+const key = "audioOutput";
+const name = "Audio Output";
+
+function createAudioNode(context, data) {
+  const node = new GainNode(context, data);
+  node.connect(context.destination);
+  context.resume();
+
+  return node;
+}
+
+const initialData = {
+  gain: 1.0,
+};
+
+export default {
+  node: Node,
+  key: key,
+  createAudioNode: createAudioNode,
+  name: name,
+  initialData: initialData,
+};

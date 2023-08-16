@@ -4,14 +4,8 @@ import { patchAudioNodeConnect } from "./nodes/CompositeAudioNode/CompositeAudio
 export const context = new AudioContext();
 await addModules(context);
 patchAudioNodeConnect();
-context.resume();
 
 const nodes = new Map();
-
-export const outputMixer = context.createGain();
-outputMixer.connect(context.destination);
-
-nodes.set("output", outputMixer);
 
 export function toggleAudio() {
   return context.state === "running" ? context.suspend() : context.resume();

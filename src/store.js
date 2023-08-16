@@ -11,7 +11,6 @@ import {
   connect,
   disconnect,
   context,
-  outputMixer,
 } from "./audio";
 import { availableNodes } from "./nodes/nodes";
 
@@ -20,14 +19,7 @@ const storageKey = "modular-synth-flow";
 // TODO: Prevent the same handle from being connected twice.
 export const useStore = createWithEqualityFn(
   (set, get) => ({
-    nodes: [
-      {
-        id: "output",
-        type: "out",
-        position: { x: 0, y: 0 },
-        data: { audioNode: outputMixer },
-      },
-    ],
+    nodes: [],
     edges: [],
 
     toggleAudio() {
@@ -105,18 +97,26 @@ export const useStore = createWithEqualityFn(
         disconnect(e);
       }
       for (const n of get().nodes) {
-        if (n.type !== "out") {
-          removeAudioNode(n.id);
-        }
+        removeAudioNode(n.id);
       }
       set({
         edges: [],
-        nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
+        nodes: [],
       });
     },
 
     save() {
-      localStorage.setItem(storageKey, JSON.stringify(get()));
+      const nodes = get().nodes.map(
+        ({ data: { audioNode, ...dataRest }, ...rest }) => ({
+          data: { ...dataRest },
+          ...rest,
+        })
+      );
+      const edges = get().edges;
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({ nodes: nodes, edges: edges })
+      );
     },
 
     restore() {
@@ -126,10 +126,8 @@ export const useStore = createWithEqualityFn(
 
       if (data) {
         for (const n of data.nodes) {
-          if (n.type !== "out") {
-            get().createNode(n.type, n.position.x, n.position.y, n.id);
-            get().updateNode(n.id, n.data);
-          }
+          get().createNode(n.type, n.position.x, n.position.y, n.id);
+          get().updateNode(n.id, n.data);
         }
         for (const e of data.edges) {
           get().addEdge(e);
