@@ -115,4 +115,4 @@ class Processor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor("exampleAudioWorklet", Processor);
+registerProcessor("adsr", Processor);
