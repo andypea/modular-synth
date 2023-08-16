@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Handle } from "reactflow";
-import { tw } from "twind";
+import { Handle } from "../UtilityComponents/Handle";
 import { useStore } from "../../store";
 import { ExampleAudioWorkletNode } from "./ExampleAudioWorklet.Node";
 import { IndicatorLight } from "../UtilityComponents/IndicatorLight";
+import { tw } from "twind";
 
 const selector = (id) => (store) => ({
   setVolume: (e) => store.updateNode(id, { volume: +e.target.value }),
@@ -36,23 +36,25 @@ function Component({ id, data }) {
 
     start();
     return () => stop();
-  }, []);
+  }, [data.audioNode.on]);
 
   return (
-    <div className={tw("rounded-md bg-white shadow-xl")}>
+    <div className={tw("rounded-md bg-white shadow-xl w-32")}>
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
         Example AudioWorklet
       </p>
 
-      <label className={tw("flex flex-col px-2 py-1")}>
+      <label className={tw("flex flex-col px-2 pt-1 pb-2")}>
         <p className={tw("text-xs font-bold mb-2")}>Status</p>
         <IndicatorLight on={on} />
       </label>
 
+      <hr className={tw("border-gray-200 mx-2")} />
+
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Volume</p>
+        <p className={tw("text-xs font-bold mb-2")}>Volume (base)</p>
         <input
           className="nodrag"
           type="range"
@@ -63,6 +65,13 @@ function Component({ id, data }) {
           onChange={setVolume}
         />
         <p className={tw("text-right text-xs")}>{data.volume.toFixed(3)}</p>
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Volume (adjust)</p>
+        <Handle type="target" position="bottom" id="volume" />
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
@@ -83,7 +92,14 @@ function Component({ id, data }) {
 
       <hr className={tw("border-gray-200 mx-2")} />
 
-      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Interval (adjust)</p>
+        <Handle type="target" position="bottom" id="interval" />
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-2")}>
         <p className={tw("text-xs font-bold mb-2")}>Noise Type</p>
         <select
           className="nodrag"
@@ -96,7 +112,12 @@ function Component({ id, data }) {
         </select>
       </label>
 
-      <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Output</p>
+        <Handle type="source" position="bottom" />
+      </label>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Handle } from "reactflow";
+import { Handle } from "../UtilityComponents/Handle";
 import { tw } from "twind";
 import { useStore } from "../../store";
 
@@ -16,7 +16,7 @@ function Node({ id, data }) {
   const { setFrequency, setDetune, setType } = useStore(selector(id));
 
   return (
-    <div className={tw("rounded-md bg-white shadow-xl")}>
+    <div className={tw("rounded-md bg-white shadow-xl w-32")}>
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
@@ -36,7 +36,7 @@ function Node({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>frequency</p>
+        <p className={tw("text-xs font-bold mb-2")}>frequency (base)</p>
         <input
           className="nodrag"
           type="range"
@@ -49,13 +49,14 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>
           {data.frequency.toFixed(0)} Hz
         </p>
-        <Handle
-          className={tw("w-3 h-3")}
-          type="target"
-          id="frequency"
-          position="left"
-          style={{ top: "57%" }}
-        />
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>frequency (adjust)</p>
+        <div className={tw("place-self-center")}>
+          <Handle type="target" id="frequency" position="bottom" />
+        </div>
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
@@ -74,16 +75,25 @@ function Node({ id, data }) {
         <p className={tw("text-right text-xs")}>
           {data.detune.toFixed(0)} cents
         </p>
-        <Handle
-          className={tw("w-3 h-3")}
-          type="target"
-          id="detune"
-          position="left"
-          style={{ top: "87%" }}
-        />
       </label>
 
-      <Handle className={tw("w-3 h-3")} type="source" position="bottom" />
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>detune (adjust)</p>
+        <div className={tw("place-self-center")}>
+          <Handle type="target" id="detune" position="bottom" />
+        </div>
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>output</p>
+        <div className={tw("place-self-center")}>
+          <Handle type="source" position="bottom" />
+        </div>
+      </label>
     </div>
   );
 }

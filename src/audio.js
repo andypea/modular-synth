@@ -4,21 +4,17 @@ import { patchAudioNodeConnect } from "./nodes/CompositeAudioNode/CompositeAudio
 export const context = new AudioContext();
 await addModules(context);
 patchAudioNodeConnect();
-context.suspend();
+context.resume();
 
 const nodes = new Map();
 
-const outputMixer = context.createGain();
+export const outputMixer = context.createGain();
 outputMixer.connect(context.destination);
 
 nodes.set("output", outputMixer);
 
-export function isRunning() {
-  return context.state === "running";
-}
-
 export function toggleAudio() {
-  return isRunning() ? context.suspend() : context.resume();
+  return context.state === "running" ? context.suspend() : context.resume();
 }
 
 export function createAudioNode(id, type, data) {

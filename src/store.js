@@ -3,7 +3,6 @@ import { nanoid } from "nanoid";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
 import {
-  isRunning,
   toggleAudio,
   createAudioNode,
   updateAudioNode,
@@ -12,6 +11,7 @@ import {
   connect,
   disconnect,
   context,
+  outputMixer,
 } from "./audio";
 import { availableNodes } from "./nodes/nodes";
 
@@ -20,14 +20,18 @@ const storageKey = "modular-synth-flow";
 // TODO: Prevent the same handle from being connected twice.
 export const useStore = createWithEqualityFn(
   (set, get) => ({
-    nodes: [{ id: "output", type: "out", position: { x: 0, y: 0 } }],
+    nodes: [
+      {
+        id: "output",
+        type: "out",
+        position: { x: 0, y: 0 },
+        data: { audioNode: outputMixer },
+      },
+    ],
     edges: [],
-    isRunning: isRunning(),
 
     toggleAudio() {
-      toggleAudio().then(() => {
-        set({ isRunning: isRunning() });
-      });
+      toggleAudio();
     },
 
     onNodesChange(changes) {
