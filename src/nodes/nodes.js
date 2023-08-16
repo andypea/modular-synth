@@ -15,11 +15,15 @@ import { default as TriggerButton } from "./TriggerButton";
 import { default as VoltToCents } from "./VoltToCents";
 import { default as Fader } from "./Fader";
 import { default as Mute } from "./Mute";
+import { default as ExampleAudioWorklet } from "./ExampleAudioWorklet/ExampleAudioWorklet.Component";
+import exampleWorkletProcessorUrl from "./ExampleAudioWorklet/ExampleAudioWorklet.Processor.js?url";
+import { default as OscillatorNode } from "./WebAudioNodes/OscillatorNode.Component";
 
 // TODO: Set the keys here, not in the modules?
-export default new Map([
+export const availableNodes = new Map([
   [Adsr.key, Adsr],
   [Osc.key, Osc],
+  [OscillatorNode.key, OscillatorNode],
   [Vco.key, Vco],
   [Vca.key, Vca],
   [BiOsc.key, BiOsc],
@@ -35,4 +39,25 @@ export default new Map([
   [VoltToCents.key, VoltToCents],
   [Fader.key, Fader],
   [Mute.key, Mute],
+  [ExampleAudioWorklet.key, ExampleAudioWorklet],
 ]);
+
+export async function addModules(context) {
+  await context.audioWorklet.addModule(
+    "/audioWorkletProcessors/random-noise-processor.js"
+  );
+  await context.audioWorklet.addModule(
+    "/audioWorkletProcessors/leadSequencer.js"
+  );
+  await context.audioWorklet.addModule(
+    "/audioWorkletProcessors/drumSequencer.js"
+  );
+  await context.audioWorklet.addModule("/audioWorkletProcessors/adsr.js");
+  await context.audioWorklet.addModule(
+    "/audioWorkletProcessors/voltToCents.js"
+  );
+
+  await context.audioWorklet
+    .addModule(exampleWorkletProcessorUrl)
+    .catch((reason) => console.log(reason));
+}

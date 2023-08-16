@@ -67,3 +67,17 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.indicator-light {
+  border: 1px solid black;
+  border-radius: 100%;
+  margin: auto;
+}
+
+.indicator-light.off {
+  background: #f0f0f0;
+}
+
+.indicator-light.on {
+  background: #fff700;
+}

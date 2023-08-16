@@ -8,7 +8,7 @@ import ReactFlow, {
 import { useStore } from "./store";
 import { tw } from "twind";
 import Out from "./nodes/Out";
-import availableNodes from "./nodes/nodes";
+import { availableNodes } from "./nodes/nodes";
 
 import "reactflow/dist/style.css";
 

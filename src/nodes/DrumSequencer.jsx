@@ -73,7 +73,7 @@ function Node({ id, data }) {
 const key = "drumSequencer";
 const name = "Drum Sequencer";
 function createAudioNode(context, data, id) {
-  const node = new AudioWorkletNode(context, "sequencer64", {
+  const node = new AudioWorkletNode(context, "drumSequencer", {
     numberOfInputs: 2,
   });
   for (let i = 1; i <= numNotes; i++) {

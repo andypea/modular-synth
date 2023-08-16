@@ -12,10 +12,11 @@ const rightHandleStyle = { left: "90%" };
 const selector = (id) => (store) => ({
   setNote: (i) => (e) =>
     store.updateNode(id, { [`note${i}`]: +e.target.value }),
+  setTab: (i) => () => store.updateNode(id, { tab: i }),
 });
 
 function Node({ id, data }) {
-  const { setNote } = useStore(selector(id));
+  const { setNote, setTab } = useStore(selector(id));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
@@ -26,33 +27,39 @@ function Node({ id, data }) {
       </p>
 
       <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Tab</p>
+        <div className="flex flex-row">
+          <button onClick={setTab(1)}>1</button>
+          <button onClick={setTab(2)}>2</button>
+        </div>
+      </label>
+
+      <label className={tw("flex flex-col px-2 py-1")}>
         <p className={tw("text-xs font-bold mb-2")}>Notes</p>
         <div className={tw("flex flex-col")}>
-          {[...Array(numRows).keys()].map((i) => (
-            <div key={i}>
-              {[...Array(numNotes / numRows).keys()]
-                .map((j) => (i * numNotes) / numRows + j + 1)
-                .map((j) => (
-                  <input
-                    style={{
-                      appearance: "slider-vertical",
-                      height: "8em",
-                      accentColor: j === data.currentNote ? "red" : "black",
-                    }}
-                    className="nodrag"
-                    orient="vertical"
-                    key={j}
-                    min={0}
-                    max={1200}
-                    step={100}
-                    type="range"
-                    value={data[`note${j}`]}
-                    onChange={setNote(j)}
-                    list="markers"
-                  />
-                ))}
-            </div>
-          ))}
+          <div>
+            {[...Array(numNotes / numRows).keys()]
+              .map((j) => ((data.tab - 1) * numNotes) / numRows + j + 1)
+              .map((j) => (
+                <input
+                  style={{
+                    appearance: "slider-vertical",
+                    height: "8em",
+                    accentColor: j === data.currentNote ? "red" : "black",
+                  }}
+                  className="nodrag"
+                  orient="vertical"
+                  key={j}
+                  min={0}
+                  max={1200}
+                  step={100}
+                  type="range"
+                  value={data[`note${j}`]}
+                  onChange={setNote(j)}
+                  list="markers"
+                />
+              ))}
+          </div>
         </div>
       </label>
 
@@ -95,7 +102,7 @@ function Node({ id, data }) {
 const key = "leadSequencer";
 const name = "Lead Sequencer";
 function createAudioNode(context, data, id) {
-  const node = new AudioWorkletNode(context, "sequencer32", {
+  const node = new AudioWorkletNode(context, "leadSequencer", {
     numberOfInputs: 2,
     hold: true,
   });
@@ -105,7 +112,7 @@ function createAudioNode(context, data, id) {
     node[parameterName].value = data[parameterName];
   }
   node.port.onmessage = (message) => {
-    useStore.getState().updateNode(id, { currentNote: message.data });
+    useStore.getState().updateNode(id, { currentNote: message.data }, false);
   };
   node.clock = new GainNode(context);
   node.clock.connect(node, 0, 0);
@@ -117,6 +124,8 @@ function createAudioNode(context, data, id) {
 
 const initialData = {
   currentNote: 1,
+  collapsed: false,
+  tab: 1,
 };
 
 for (let i = 1; i <= numNotes; i++) {

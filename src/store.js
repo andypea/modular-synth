@@ -13,7 +13,7 @@ import {
   disconnect,
   context,
 } from "./audio";
-import availableNodes from "./nodes/nodes";
+import { availableNodes } from "./nodes/nodes";
 
 const storageKey = "modular-synth-flow";
 
@@ -53,8 +53,10 @@ export const useStore = createWithEqualityFn(
       set({ nodes: [...get().nodes, { id, type, data, position }] });
     },
 
-    updateNode(id, data) {
-      updateAudioNode(id, data);
+    updateNode(id, data, doUpdateAudioNode = true) {
+      if (doUpdateAudioNode) {
+        updateAudioNode(id, data);
+      }
       set({
         nodes: get().nodes.map((node) =>
           node.id === id

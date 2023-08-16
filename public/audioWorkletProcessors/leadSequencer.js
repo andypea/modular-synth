@@ -1,4 +1,5 @@
-const numNotes = 64;
+// TODO: Make this just a cutdown seuqencer64
+const numNotes = 32;
 
 class Sequencer extends AudioWorkletProcessor {
   constructor() {
@@ -6,6 +7,7 @@ class Sequencer extends AudioWorkletProcessor {
 
     this.high = false;
     this.currentNote = 0;
+    this.outputValue = 0.0;
   }
 
   process(inputList, outputList, parameters) {
@@ -16,8 +18,6 @@ class Sequencer extends AudioWorkletProcessor {
     for (let i = 0; i < numNotes; i++) {
       notes[i] = parameters[`note${i + 1}`];
     }
-
-    let outputValue = 0.0;
 
     // TODO: Handle multiple channels and outputs correctly.
     // TODO: Don't block output if inputChannel is not defined!?
@@ -30,7 +30,7 @@ class Sequencer extends AudioWorkletProcessor {
           this.high = true;
           this.currentNote = (this.currentNote + 1) % numNotes;
           this.port.postMessage(this.currentNote);
-          outputValue =
+          this.outputValue =
             notes[this.currentNote].length === 1
               ? notes[this.currentNote][0]
               : notes[this.currentNote][i];
@@ -40,7 +40,7 @@ class Sequencer extends AudioWorkletProcessor {
 
         for (const output of outputList) {
           for (const outputChannel of output) {
-            outputChannel[i] = outputValue;
+            outputChannel[i] = this.outputValue;
           }
         }
         //outputValue = 0.0;
@@ -66,4 +66,4 @@ class Sequencer extends AudioWorkletProcessor {
 
 // define the customGain parameter used in process method
 
-registerProcessor("sequencer64", Sequencer);
+registerProcessor("leadSequencer", Sequencer);
