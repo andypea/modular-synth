@@ -56,7 +56,7 @@ function Component({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Volume (base)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Volume</p>
         <input
           className="nodrag"
           type="range"
@@ -72,7 +72,7 @@ function Component({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Volume (adjust)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Volume (input)</p>
         <Handle type="target" position="bottom" id="volume" />
       </label>
 
@@ -95,7 +95,7 @@ function Component({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Interval (adjust)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Interval (input)</p>
         <Handle type="target" position="bottom" id="interval" />
       </label>
 
