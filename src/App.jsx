@@ -10,7 +10,8 @@ import { tw } from "twind";
 import Out from "./nodes/Out";
 import { availableNodes } from "./nodes/nodes";
 
-import "reactflow/dist/style.css";
+// import "reactflow/dist/style.css";
+import "reactflow/dist/base.css";
 
 const nodeTypes = {
   out: Out,
