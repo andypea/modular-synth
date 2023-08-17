@@ -1,6 +1,6 @@
 import { CompositeAudioNode } from "../Utils/CompositeAudioNode";
 
-export class ExampleCompositeNode extends CompositeAudioNode {
+export default class Node extends CompositeAudioNode {
   get gain() {
     return this._amp.gain;
   }

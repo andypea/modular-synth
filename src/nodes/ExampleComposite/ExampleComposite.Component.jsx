@@ -2,7 +2,7 @@ import React from "react";
 import { Handle } from "../Utils/Handle";
 import { tw } from "twind";
 import { useStore } from "../../store";
-import { ExampleCompositeNode } from "./ExampleComposite.Node";
+import { default as ExampleCompositeNode } from "./ExampleComposite.Node";
 
 function Node({ id, data }) {
   return (
