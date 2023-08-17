@@ -7,6 +7,7 @@ import { default as Adsr } from "./Adsr/Adsr.Component";
 import adsrProcessorUrl from "./Adsr/Adsr.Processor.js?url";
 import { default as GateButton } from "./GateButton/GateButton.Component";
 import { default as Vca } from "./Vca/Vca.Component";
+import { default as Vco } from "./Vco/Vco.Component";
 
 export const availableNodes = new Map([
   [ExampleSimple.key, ExampleSimple],
@@ -16,6 +17,7 @@ export const availableNodes = new Map([
   [Adsr.key, Adsr],
   [GateButton.key, GateButton],
   [Vca.key, Vca],
+  [Vco.key, Vco],
 ]);
 
 export async function addModules(context) {
