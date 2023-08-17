@@ -6,11 +6,12 @@ import { default as VcoNode } from "./Vco.Node";
 
 const selector = (id) => (store) => ({
   setFrequency: (e) => store.updateNode(id, { frequency: +e.target.value }),
+  setType: (e) => store.updateNode(id, { type: e.target.value }),
   setFmGain: (e) => store.updateNode(id, { fmGain: +e.target.value }),
 });
 
 function Node({ id, data }) {
-  const { setFrequency, setFmGain } = useStore(selector(id));
+  const { setFrequency, setFmGain, setType } = useStore(selector(id));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl w-32")}>
@@ -61,6 +62,18 @@ function Node({ id, data }) {
 
       <hr className={tw("border-gray-200 mx-2")} />
 
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Type</p>
+        <select className="nodrag" value={data.type} onChange={setType}>
+          <option value="sine">sine</option>
+          <option value="triangle">triangle</option>
+          <option value="sawtooth">sawtooth</option>
+          <option value="square">square</option>
+        </select>
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
       <label className={tw("flex flex-col px-2 py-1")}>
         <p className={tw("text-xs font-bold mb-2")}>Output</p>
         <Handle type="source" position="bottom" />
@@ -81,6 +94,7 @@ function createAudioNode(context, data) {
 const initialData = {
   frequency: 261.625565,
   fmGain: 100.0,
+  type: "sine",
 };
 
 export default {
