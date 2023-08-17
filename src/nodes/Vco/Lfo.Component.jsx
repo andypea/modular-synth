@@ -5,6 +5,8 @@ import { useStore } from "../../store";
 import { default as VcoNode } from "./Vco.Node";
 import { Node as VcoComponent } from "./Vco.Component";
 
+// TODO: Pull this out into its own module that doesn't build on VCO
+
 function Node({ id, data, minFrequency = 0, maxFrequency = 100.0 }) {
   return (
     <VcoComponent
