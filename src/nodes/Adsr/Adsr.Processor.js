@@ -1,6 +1,7 @@
-class Processor extends AudioWorkletProcessor {
+export default class Processor extends AudioWorkletProcessor {
   constructor(options) {
-    const { outputChannelCount, parameterData, processorOptions } = options;
+    const { outputChannelCount, parameterData, processorOptions } =
+      options ?? {};
 
     super({
       numberOfInputs: 2,
@@ -50,7 +51,7 @@ class Processor extends AudioWorkletProcessor {
       if (
         this.gateHigh &&
         gateValue < this.threshold &&
-        frameNumber > frameNumber + attackFrames + decayFrames
+        frameNumber >= this.releaseFrame
       ) {
         this.releaseFrame = frameNumber;
       }

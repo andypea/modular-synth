@@ -24,7 +24,7 @@ function Node({ id, data }) {
       </p>
 
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
-        <p className={tw("text-xs font-bold mb-2")}>type</p>
+        <p className={tw("text-xs font-bold mb-2")}>Type</p>
         <select className="nodrag" value={data.type} onChange={setType}>
           <option value="sine">sine</option>
           <option value="triangle">triangle</option>
@@ -36,7 +36,7 @@ function Node({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>frequency (base)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Frequency (base)</p>
         <input
           className="nodrag"
           type="range"
@@ -53,7 +53,7 @@ function Node({ id, data }) {
 
       <hr className={tw("border-gray-200 mx-2")} />
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>frequency (adjust)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Frequency (adjust)</p>
         <div className={tw("place-self-center")}>
           <Handle type="target" id="frequency" position="bottom" />
         </div>
@@ -62,7 +62,7 @@ function Node({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>detune</p>
+        <p className={tw("text-xs font-bold mb-2")}>Detune</p>
         <input
           className="nodrag"
           type="range"
@@ -80,7 +80,7 @@ function Node({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>detune (adjust)</p>
+        <p className={tw("text-xs font-bold mb-2")}>Detune (adjust)</p>
         <div className={tw("place-self-center")}>
           <Handle type="target" id="detune" position="bottom" />
         </div>
@@ -89,7 +89,7 @@ function Node({ id, data }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>output</p>
+        <p className={tw("text-xs font-bold mb-2")}>Output</p>
         <div className={tw("place-self-center")}>
           <Handle type="source" position="bottom" />
         </div>
