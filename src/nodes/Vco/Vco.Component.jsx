@@ -10,7 +10,7 @@ const selector = (id) => (store) => ({
   setFmGain: (e) => store.updateNode(id, { fmGain: +e.target.value }),
 });
 
-function Node({ id, data }) {
+export function Node({ id, data, minFrequency = 0, maxFrequency = 440.0 }) {
   const { setFrequency, setFmGain, setType } = useStore(selector(id));
 
   return (
@@ -26,8 +26,8 @@ function Node({ id, data }) {
         <input
           className="nodrag"
           type="range"
-          min="0.0"
-          max="440.0"
+          min={minFrequency}
+          max={maxFrequency}
           step="any"
           value={data.frequency}
           onChange={setFrequency}
