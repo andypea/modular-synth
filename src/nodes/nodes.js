@@ -6,6 +6,7 @@ import { default as AudioOutput } from "./AudioOutput/AudioOutput.Component";
 import { default as Adsr } from "./Adsr/Adsr.Component";
 import adsrProcessorUrl from "./Adsr/Adsr.Processor.js?url";
 import { default as GateButton } from "./GateButton/GateButton.Component";
+import { default as Vca } from "./Vca/Vca.Component";
 
 export const availableNodes = new Map([
   [ExampleSimple.key, ExampleSimple],
@@ -14,6 +15,7 @@ export const availableNodes = new Map([
   [AudioOutput.key, AudioOutput],
   [Adsr.key, Adsr],
   [GateButton.key, GateButton],
+  [Vca.key, Vca],
 ]);
 
 export async function addModules(context) {
