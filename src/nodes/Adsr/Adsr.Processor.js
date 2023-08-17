@@ -1,117 +1,156 @@
 class Processor extends AudioWorkletProcessor {
   constructor(options) {
-    const {
-      // numberOfInputs, // This node has a fixed numberOfInputs
-      // numberOfOutputs, // This node has a fixed numberOfOutputs
-      outputChannelCount,
-      parameterData,
-      processorOptions,
-    } = options;
+    const { outputChannelCount, parameterData, processorOptions } = options;
 
     super({
-      numberOfInputs: 0,
+      numberOfInputs: 2,
       numberOfOutputs: 1,
       outputChannelCount: outputChannelCount,
       parameterData: parameterData,
     });
 
-    if (processorOptions?.noiseType) {
-      this.noiseType = processorOptions.noiseType;
+    if (processorOptions?.threshold) {
+      this.threshold = processorOptions.threshold;
     }
 
-    this.port.onmessage = (message) => this.portOnMessageHandler(message);
-
-    this.previousOutputValue = 0.0;
-    this.intervalFrameCount = 0;
-    this.on = true;
+    if (processorOptions?.maxChange) {
+      this.maxChange = processorOptions.maxChange;
+    }
   }
 
-  // Called once per block (currently 128 frames).
-  process(inputList, outputList, parameters) {
-    const output = outputList[0];
-    // We can read the parameters here as they are not a-rate and, therefore,
-    // do not change within a block.
-    const volume = parameters["volume"][0];
-    const interval = parameters["interval"][0];
-    const intervalFrames = Math.floor(interval * sampleRate);
+  threshold = 0.5;
+  maxChange = 0.001; // TODO: This should depend on the sampleRate
+  triggerFrame = -1;
+  releaseFrame = -1;
+  gateHigh = false;
+  reTriggerHigh = false;
+  previousOutputValue = 0.0;
 
-    if (output.length > 0) {
-      const channel0 = output[0];
-      const blockSize = channel0.length;
-      for (let i = 0; i < blockSize; i++) {
-        if (interval === 0.0) {
-          if (!this.on) {
-            this.port.postMessage({ type: "updateOn", value: true });
-          }
-          this.on = true;
-        } else if (this.intervalFrameCount >= intervalFrames) {
-          this.on = !this.on;
-          this.port.postMessage({ type: "updateOn", value: this.on });
-          this.intervalFrameCount = 0;
-        } else {
-          this.intervalFrameCount += 1;
-        }
+  process([[gate], [reTrigger]], outputList, parameters) {
+    const blockSize =
+      gate?.length ?? reTrigger?.length ?? outputList[0]?.[0]?.length ?? 0;
 
-        let outputValue = 0.0;
+    const attackFrames = parameters.attack[0] * sampleRate;
+    const decayFrames = parameters.decay[0] * sampleRate;
+    const releaseFrames = parameters.release[0] * sampleRate;
 
-        if (!this.on) {
-          outputValue = 0.0;
-        } else {
-          switch (this.noiseType) {
-            case "white":
-              outputValue = Math.random() * 2 - 1;
-              break;
-            case "brown": {
-              // From: https://noisehack.com/generate-noise-web-audio-api/
-              const white = Math.random() * 2 - 1;
-              outputValue = (this.previousOutputValue + 0.02 * white) / 1.02;
-              this.previousOutputValue = outputValue;
-              outputValue *= 3.5; // (roughly) compensate for gain
-              break;
-            }
-            default:
-              outputValue = 0.0;
-          }
-        }
+    for (let i = 0; i < blockSize; i++) {
+      const frameNumber = currentFrame + i;
+      const gateValue = gate?.[i] ?? 0.0;
+      const reTriggerValue = reTrigger?.[i] ?? 0.0;
 
+      if (
+        (!this.gateHigh && gateValue > this.threshold) ||
+        (!this.reTriggerHigh && reTriggerValue > this.threshold)
+      ) {
+        this.triggerFrame = frameNumber;
+        this.releaseFrame = frameNumber + attackFrames + decayFrames;
+      }
+
+      if (
+        this.gateHigh &&
+        gateValue < this.threshold &&
+        frameNumber > frameNumber + attackFrames + decayFrames
+      ) {
+        this.releaseFrame = frameNumber;
+      }
+
+      this.gateHigh = gateValue > 0.5;
+      this.reTriggerHigh = reTriggerValue > 0.5;
+
+      const targetOutputValue = calcOutputValue(
+        frameNumber,
+        this.gateHigh,
+        this.triggerFrame,
+        this.releaseFrame,
+        attackFrames,
+        decayFrames,
+        parameters.sustain[0],
+        releaseFrames
+      );
+
+      const targetOutputChange = targetOutputValue - this.previousOutputValue;
+
+      const outputValue =
+        Math.abs(targetOutputChange) > this.maxChange
+          ? this.previousOutputValue +
+            Math.sign(targetOutputChange) * this.maxChange
+          : targetOutputValue;
+
+      this.previousOutputValue = outputValue;
+
+      for (const output of outputList) {
         for (const channel of output) {
-          channel[i] = volume * outputValue;
+          channel[i] = outputValue;
         }
       }
     }
 
-    // The return value affects garbage collection of this node.
-    // If you change this, then also change the return value above.
+    // TODO: This could lead to memory leaks!
     return true;
   }
 
+  // TODO: Set reasonable min and max param values.
   static get parameterDescriptors() {
     return [
       {
-        name: "volume",
-        automationRate: "k-rate", // Updated once per block
-        minValue: 0.0,
-        maxValue: 1.0,
-        defaultValue: 0.01,
+        name: "attack",
+        defaultValue: 0.06,
+        minValue: 0,
+        maxValue: 2,
+        automationRate: "k-rate",
       },
       {
-        name: "interval",
+        name: "decay",
+        defaultValue: 0.25,
+        minValue: 0,
+        maxValue: 1,
         automationRate: "k-rate",
-        minValue: 0.0,
-        maxValue: 10.0,
-        defaultValue: 1.0,
+      },
+      {
+        name: "sustain",
+        defaultValue: 0.2,
+        minValue: 0,
+        maxValue: 1,
+        automationRate: "k-rate",
+      },
+      {
+        name: "release",
+        defaultValue: 0.7,
+        minValue: 0,
+        maxValue: 1,
+        automationRate: "k-rate",
       },
     ];
   }
+}
 
-  noiseType = "white";
-
-  portOnMessageHandler(message) {
-    if (message.data.type === "updateNoiseType") {
-      this.noiseType = message.data.value;
-    } else {
-      console.error("Unknown message", message.data);
-    }
+function calcOutputValue(
+  frameNum,
+  gateHigh,
+  triggerFrameNum,
+  releaseFrameNum,
+  attackFrames,
+  decayFrames,
+  sustain,
+  releaseFrames
+) {
+  if (triggerFrameNum < 0) {
+    return 0.0;
+  } else if (frameNum < triggerFrameNum + attackFrames) {
+    return (frameNum - triggerFrameNum) / attackFrames;
+  } else if (frameNum < triggerFrameNum + attackFrames + decayFrames) {
+    return (
+      1.0 -
+      ((1.0 - sustain) * (frameNum - (triggerFrameNum + attackFrames))) /
+        decayFrames
+    );
+  } else if (gateHigh) {
+    return sustain;
+  } else if (frameNum < releaseFrameNum + releaseFrames) {
+    return sustain * (1.0 - (frameNum - releaseFrameNum) / releaseFrames);
+  } else {
+    return 0.0;
   }
 }
 

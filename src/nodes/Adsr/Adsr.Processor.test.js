@@ -1,4 +1,4 @@
-import "./fixtures/AudioWorkletProcessor.js";
+import "../TestUtils/AudioWorkletProcessor";
 import { describe, expect, test, vi } from "vitest";
 import Adsr from "./adsr";
 

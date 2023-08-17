@@ -2,119 +2,99 @@ import React, { useState, useEffect } from "react";
 import { Handle } from "../Utils/Handle";
 import { useStore } from "../../store";
 import { AdsrNode } from "./Adsr.Node";
-import { IndicatorLight } from "../Utils/IndicatorLight";
 import { tw } from "twind";
 
 const selector = (id) => (store) => ({
-  setVolume: (e) => store.updateNode(id, { volume: +e.target.value }),
-  setInterval: (e) => store.updateNode(id, { interval: +e.target.value }),
-  setNoiseType: (e) => store.updateNode(id, { noiseType: e.target.value }),
+  setAttack: (e) => store.updateNode(id, { attack: +e.target.value }),
+  setDecay: (e) => store.updateNode(id, { decay: +e.target.value }),
+  setSustain: (e) => store.updateNode(id, { sustain: +e.target.value }),
+  setRelease: (e) => store.updateNode(id, { release: +e.target.value }),
 });
 
 function Component({ id, data }) {
-  const { setVolume, setInterval, setNoiseType } = useStore(selector(id));
-  const [on, setOn] = useState(true);
-
-  useEffect(() => {
-    let frameId = null;
-
-    function onFrame() {
-      frameId = requestAnimationFrame(onFrame);
-      setOn(data.audioNode.on);
-    }
-
-    function start() {
-      frameId = requestAnimationFrame(onFrame);
-    }
-
-    function stop() {
-      if (frameId) {
-        cancelAnimationFrame(frameId);
-        frameId = null;
-      }
-    }
-
-    start();
-    return () => stop();
-  }, [data.audioNode.on]);
+  const { setAttack, setDecay, setSustain, setRelease } = useStore(
+    selector(id)
+  );
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl w-32")}>
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
-        Example AudioWorklet
+        ADSR
       </p>
 
-      <label className={tw("flex flex-col px-2 pt-1 pb-2")}>
-        <p className={tw("text-xs font-bold mb-2")}>Status</p>
-        <div className={tw("m-auto")}>
-          <IndicatorLight on={on} />
-        </div>
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>Gate</p>
+        <Handle type="target" position="bottom" id="0" />
       </label>
 
-      <hr className={tw("border-gray-200 mx-2")} />
-
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Volume</p>
+        <p className={tw("text-xs font-bold mb-2")}>reTrigger</p>
+        <Handle type="target" position="bottom" id={1} />
+      </label>
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Attack</p>
         <input
           className="nodrag"
           type="range"
-          min="0.0"
-          max="1.0"
-          step="any"
-          value={data.volume}
-          onChange={setVolume}
+          min="0"
+          max="1"
+          step="0.01"
+          value={data.attack}
+          onChange={setAttack}
         />
-        <p className={tw("text-right text-xs")}>{data.volume.toFixed(3)}</p>
+        <p className={tw("text-right text-xs")}>{data.attack.toFixed(2)}</p>
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
 
-      <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Volume (input)</p>
-        <Handle type="target" position="bottom" id="volume" />
-      </label>
-
-      <hr className={tw("border-gray-200 mx-2")} />
-
-      <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Interval</p>
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Decay</p>
         <input
           className="nodrag"
           type="range"
-          min="0.0"
-          max="10.0"
-          step="any"
-          value={data.interval}
-          onChange={setInterval}
+          min="0"
+          max="1"
+          step="0.01"
+          value={data.decay}
+          onChange={setDecay}
         />
-        <p className={tw("text-right text-xs")}>{data.interval.toFixed(3)}</p>
+        <p className={tw("text-right text-xs")}>{data.decay.toFixed(2)}</p>
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
 
-      <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Interval (input)</p>
-        <Handle type="target" position="bottom" id="interval" />
-      </label>
-
-      <hr className={tw("border-gray-200 mx-2")} />
-
-      <label className={tw("flex flex-col px-2 pt-1 pb-2")}>
-        <p className={tw("text-xs font-bold mb-2")}>Noise Type</p>
-        <select
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Sustain</p>
+        <input
           className="nodrag"
-          value={data.noiseType}
-          onChange={setNoiseType}
-        >
-          <option value="white">white</option>
-          <option value="brown">brown</option>
-          <option value="none">none</option>
-        </select>
+          type="range"
+          min="0"
+          max="3"
+          step="0.01"
+          value={data.sustain}
+          onChange={setSustain}
+        />
+        <p className={tw("text-right text-xs")}>{data.sustain.toFixed(2)}</p>
       </label>
 
       <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
+        <p className={tw("text-xs font-bold mb-2")}>Release</p>
+        <input
+          className="nodrag"
+          type="range"
+          min="0"
+          max="3"
+          step="0.01"
+          value={data.release}
+          onChange={setRelease}
+        />
+        <p className={tw("text-right text-xs")}>{data.release.toFixed(2)}</p>
+      </label>
 
       <label className={tw("flex flex-col px-2 py-1")}>
         <p className={tw("text-xs font-bold mb-2")}>Output</p>
@@ -131,7 +111,12 @@ function createAudioNode(context, data) {
   return new AdsrNode(context, data);
 }
 
-const initialData = { volume: 0.01, noiseType: "brown", interval: 1.0 };
+const initialData = {
+  attack: 0.06,
+  decay: 0.25,
+  sustain: 0.2,
+  release: 0.7,
+};
 
 export default {
   node: Component,

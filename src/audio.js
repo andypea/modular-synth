@@ -44,21 +44,41 @@ export function removeAudioNode(id) {
 }
 
 export function connect({ source, target, sourceHandle, targetHandle }) {
+  const numberRegExp = /^\d+$/;
+
   const sourceNode = nodes.get(source);
+  const outputIndex = numberRegExp.test(sourceHandle)
+    ? parseInt(sourceHandle)
+    : 0;
+
   const targetNode = nodes.get(target);
 
-  const trueSource = sourceHandle ? sourceNode[sourceHandle] : sourceNode;
-  const trueTarget = targetHandle ? targetNode[targetHandle] : targetNode;
-
-  trueSource.connect(trueTarget);
+  if (!targetHandle) {
+    sourceNode.connect(targetNode, outputIndex);
+  } else if (numberRegExp.test(targetHandle)) {
+    const inputIndex = parseInt(targetHandle);
+    sourceNode.connect(targetNode, outputIndex, inputIndex);
+  } else {
+    sourceNode.connect(targetNode[targetHandle], outputIndex);
+  }
 }
 
 export function disconnect({ source, target, sourceHandle, targetHandle }) {
+  const numberRegExp = /^\d+$/;
+
   const sourceNode = nodes.get(source);
+  const outputIndex = numberRegExp.test(sourceHandle)
+    ? parseInt(sourceHandle)
+    : 0;
+
   const targetNode = nodes.get(target);
 
-  const trueSource = sourceHandle ? sourceNode[sourceHandle] : sourceNode;
-  const trueTarget = targetHandle ? targetNode[targetHandle] : targetNode;
-
-  trueSource.disconnect(trueTarget);
+  if (!targetHandle) {
+    sourceNode.disconnect(targetNode, outputIndex);
+  } else if (numberRegExp.test(targetHandle)) {
+    const inputIndex = parseInt(targetHandle);
+    sourceNode.disconnect(targetNode, outputIndex, inputIndex);
+  } else {
+    sourceNode.disconnect(targetNode[targetHandle], outputIndex);
+  }
 }
