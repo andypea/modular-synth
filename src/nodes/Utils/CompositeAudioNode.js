@@ -27,4 +27,12 @@ export function patchAudioNodeConnect() {
 
     this._connect.apply(this, args);
   };
+
+  AudioNode.prototype._disconnect = AudioNode.prototype.disconnect;
+  AudioNode.prototype.disconnect = function () {
+    var args = Array.prototype.slice.call(arguments);
+    if (args[0] && args[0]._isCompositeAudioNode) args[0] = args[0]._input;
+
+    this._disconnect.apply(this, args);
+  };
 }
