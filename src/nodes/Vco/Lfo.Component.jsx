@@ -29,6 +29,8 @@ const initialData = {
   frequency: 2.0,
   fmGain: 10.0,
   type: "sine",
+  fm: 0.0,
+  cv: 0.0,
 };
 
 export default {

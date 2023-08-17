@@ -49,7 +49,7 @@ export function connect({ source, target, sourceHandle, targetHandle }) {
   const sourceNode = nodes.get(source);
   const outputIndex = numberRegExp.test(sourceHandle)
     ? parseInt(sourceHandle)
-    : 0;
+    : undefined;
 
   const targetNode = nodes.get(target);
 
@@ -69,7 +69,7 @@ export function disconnect({ source, target, sourceHandle, targetHandle }) {
   const sourceNode = nodes.get(source);
   const outputIndex = numberRegExp.test(sourceHandle)
     ? parseInt(sourceHandle)
-    : 0;
+    : undefined;
 
   const targetNode = nodes.get(target);
 

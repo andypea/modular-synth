@@ -40,9 +40,18 @@ export function Node({ id, data, minFrequency = 0, maxFrequency = 440.0 }) {
       <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
-        <p className={tw("text-xs font-bold mb-2")}>Frequency Modulation</p>
+        <p className={tw("text-xs font-bold mb-2")}>CV</p>
+        <Handle type="target" position="bottom" id="cv" />
+      </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
+
+      <label className={tw("flex flex-col px-2 py-1")}>
+        <p className={tw("text-xs font-bold mb-2")}>FM</p>
         <Handle type="target" position="bottom" id="fm" />
       </label>
+
+      <hr className={tw("border-gray-200 mx-2")} />
 
       <label className={tw("flex flex-col px-2 py-1")}>
         <p className={tw("text-xs font-bold mb-2")}>FM Gain</p>
@@ -50,7 +59,7 @@ export function Node({ id, data, minFrequency = 0, maxFrequency = 440.0 }) {
           className="nodrag"
           type="range"
           min="0.0"
-          max="100.0"
+          max="200.0"
           step="any"
           value={data.fmGain}
           onChange={setFmGain}
@@ -94,6 +103,8 @@ function createAudioNode(context, data) {
 const initialData = {
   frequency: 261.625565,
   fmGain: 100.0,
+  fm: 0.0,
+  cv: 0.0,
   type: "sine",
 };
 

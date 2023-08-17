@@ -9,6 +9,7 @@ import { default as GateButton } from "./GateButton/GateButton.Component";
 import { default as Vca } from "./Vca/Vca.Component";
 import { default as Vco } from "./Vco/Vco.Component";
 import { default as Lfo } from "./Vco/Lfo.Component";
+import { default as Keyboard } from "./Keyboard/Keyboard.Component";
 
 export const availableNodes = new Map([
   //  [ExampleSimple.key, ExampleSimple],
@@ -20,6 +21,7 @@ export const availableNodes = new Map([
   [Vca.key, Vca],
   [Vco.key, Vco],
   [Lfo.key, Lfo],
+  [Keyboard.key, Keyboard],
 ]);
 
 export async function addModules(context) {
