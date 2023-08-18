@@ -100,6 +100,7 @@ function Component({ id, data }) {
                 style={{
                   appearance: "slider-vertical",
                   accentColor: i === currentNote ? "red" : "black",
+                  minWidth: 0,
                 }}
                 type="range"
                 min={0}
