@@ -20,7 +20,20 @@ const storageKey = "modular-synth-flow";
 // TODO: Prevent the same handle from being connected twice.
 export const useStore = createWithEqualityFn(
   (set, get) => ({
-    nodes: [],
+    nodes: [
+      {
+        data: {
+          text: 'Click the "Demo" button at the top-left to get started!',
+        },
+        id: "JLipwBNlFgLeC1lWPZcar",
+        type: "text",
+        position: { x: 0, y: 0 },
+        width: 256,
+        height: 122,
+        selected: true,
+        dragging: false,
+      },
+    ],
     edges: [],
 
     toggleAudio() {

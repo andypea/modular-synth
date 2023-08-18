@@ -37,10 +37,12 @@ export function messageAudioNode(id, message) {
 export function removeAudioNode(id) {
   const node = nodes.get(id);
 
-  node.disconnect();
-  node.stop?.();
+  if (node) {
+    node.disconnect();
+    node.stop?.();
 
-  nodes.delete(id);
+    nodes.delete(id);
+  }
 }
 
 export function connect({ source, target, sourceHandle, targetHandle }) {
