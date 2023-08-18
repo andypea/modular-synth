@@ -91,14 +91,12 @@ function Component({ id, data }) {
             <option key={i} value={i}></option>
           ))}
         </datalist>
-        <div className={tw("flex flex-row")}>
+        <div className={tw("flex flex-col")}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <div key={i} className={tw("flex flex-col space-y-2")}>
+            <div key={i} className={tw("flex flex-row space-x-2")}>
               <input
                 className="nodrag"
-                orient="vertical"
                 style={{
-                  appearance: "slider-vertical",
                   accentColor: i === currentNote ? "red" : "black",
                   minWidth: 0,
                 }}
