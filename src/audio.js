@@ -2,10 +2,12 @@ import { availableNodes, addModules } from "./nodes/nodes";
 import { patchAudioNodeConnect } from "./nodes/Utils/CompositeAudioNode";
 
 export const context = new AudioContext();
-await addModules(context);
-patchAudioNodeConnect();
-
 const nodes = new Map();
+
+export async function init() {
+  await addModules(context);
+  patchAudioNodeConnect();
+}
 
 export function toggleAudio() {
   return context.state === "running" ? context.suspend() : context.resume();

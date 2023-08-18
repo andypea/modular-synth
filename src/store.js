@@ -11,11 +11,14 @@ import {
   connect,
   disconnect,
   context,
+  init,
 } from "./audio";
 import { availableNodes } from "./nodes/nodes";
 import demoString from "./demo.json?raw";
 
 const storageKey = "modular-synth-flow";
+
+init();
 
 // TODO: Prevent the same handle from being connected twice.
 export const useStore = createWithEqualityFn(
