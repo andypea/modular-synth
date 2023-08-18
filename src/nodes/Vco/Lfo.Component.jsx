@@ -11,6 +11,7 @@ function Node({ id, data, minFrequency = 0, maxFrequency = 100.0 }) {
   return (
     <VcoComponent
       id={id}
+      title="LFO"
       data={data}
       minFrequency={minFrequency}
       maxFrequency={maxFrequency}

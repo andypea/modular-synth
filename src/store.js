@@ -13,6 +13,7 @@ import {
   context,
 } from "./audio";
 import { availableNodes } from "./nodes/nodes";
+import demoString from "./demo.json?raw";
 
 const storageKey = "modular-synth-flow";
 
@@ -119,10 +120,9 @@ export const useStore = createWithEqualityFn(
       );
     },
 
-    restore() {
+    loadPatchFromString(patchString) {
       get().reset();
-
-      const data = JSON.parse(localStorage.getItem(storageKey));
+      const data = JSON.parse(patchString);
 
       if (data) {
         for (const n of data.nodes) {
@@ -133,6 +133,15 @@ export const useStore = createWithEqualityFn(
           get().addEdge(e);
         }
       }
+    },
+
+    restore() {
+      const patchString = localStorage.getItem(storageKey);
+      get().loadPatchFromString(patchString);
+    },
+
+    demo() {
+      get().loadPatchFromString(demoString);
     },
   }),
   shallow

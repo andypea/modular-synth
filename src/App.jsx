@@ -30,6 +30,7 @@ const selector = (store) => ({
   reset: store.reset,
   save: store.save,
   restore: store.restore,
+  demo: store.demo,
 });
 
 export default function App() {
@@ -51,6 +52,12 @@ export default function App() {
           fitViewOptions={{ maxZoom: 1 }}
         >
           <Panel className={tw("space-x-4")} position="top-left">
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.demo}
+            >
+              Demo
+            </button>
             <button
               className={tw("px-2 py-1 rounded bg-white shadow")}
               onClick={store.save}

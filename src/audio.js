@@ -49,7 +49,7 @@ export function connect({ source, target, sourceHandle, targetHandle }) {
   const sourceNode = nodes.get(source);
   const outputIndex = numberRegExp.test(sourceHandle)
     ? parseInt(sourceHandle)
-    : undefined;
+    : 0;
 
   const targetNode = nodes.get(target);
 

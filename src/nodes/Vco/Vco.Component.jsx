@@ -10,7 +10,13 @@ const selector = (id) => (store) => ({
   setFmGain: (e) => store.updateNode(id, { fmGain: +e.target.value }),
 });
 
-export function Node({ id, data, minFrequency = 0, maxFrequency = 440.0 }) {
+export function Node({
+  id,
+  data,
+  minFrequency = 0,
+  maxFrequency = 440.0,
+  title = "VCO",
+}) {
   const { setFrequency, setFmGain, setType } = useStore(selector(id));
 
   return (
@@ -18,7 +24,7 @@ export function Node({ id, data, minFrequency = 0, maxFrequency = 440.0 }) {
       <p
         className={tw("rounded-t-md px-2 py-1 bg-pink-500 text-white text-sm")}
       >
-        VCO
+        {title}
       </p>
 
       <label className={tw("flex flex-col px-2 py-1")}>

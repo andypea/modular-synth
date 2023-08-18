@@ -18,6 +18,9 @@ export default class Node extends CompositeAudioNode {
     this.cv = this._cv.offset;
     this._cv.start();
 
-    this._outputs = [this._gate, this._cv];
+    this.outputs = [
+      { node: this._gate, outputIndex: 0 },
+      { node: this._cv, outputIndex: 0 },
+    ];
   }
 }

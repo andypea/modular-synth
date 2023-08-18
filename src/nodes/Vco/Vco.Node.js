@@ -12,25 +12,31 @@ export default class Node extends CompositeAudioNode {
   constructor(context, options) {
     super(context, options);
 
-    // Do stuffs below.
     this._osc = new OscillatorNode(context, {
       frequency: options.frequency ?? 261.625565,
       type: options.type ?? "sine",
     });
+    this._osc.start();
     this.frequency = this._osc.frequency;
-    this._osc.connect(this._output);
+    this.outputs[0] = { node: this._osc, outputIndex: 0 };
 
     this._fmGain = new GainNode(context, {
       gain: options.fmGain ?? 100.0,
     });
     this._fmGain.connect(this._osc.detune);
     this.fmGain = this._fmGain.gain;
-    this.fm = this._fmGain;
+
+    this._fmSource = new ConstantSourceNode(context, { offset: 0.0 });
+    this._fmSource.start();
+    this._fmSource.connect(this._fmGain);
+    this.fm = this._fmSource.offset;
 
     this._cvGain = new GainNode(context, { gain: 6000.0 });
     this._cvGain.connect(this._osc.detune);
-    this.cv = this._cvGain;
 
-    this._osc.start();
+    this._cvSource = new ConstantSourceNode(context, { offset: 0.0 });
+    this._cvSource.start();
+    this._cvSource.connect(this._cvGain);
+    this.cv = this._cvSource.offset;
   }
 }

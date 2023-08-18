@@ -11,6 +11,7 @@ import { default as Vco } from "./Vco/Vco.Component";
 import { default as Lfo } from "./Vco/Lfo.Component";
 import { default as Keyboard } from "./Keyboard/Keyboard.Component";
 import { default as Reverb } from "./Reverb/Reverb.Component";
+import { default as Mixer } from "./Mixer/Mixer.Component";
 
 export const availableNodes = new Map([
   //  [ExampleSimple.key, ExampleSimple],
@@ -24,6 +25,7 @@ export const availableNodes = new Map([
   [Lfo.key, Lfo],
   [Keyboard.key, Keyboard],
   [Reverb.key, Reverb],
+  [Mixer.key, Mixer],
 ]);
 
 export async function addModules(context) {
