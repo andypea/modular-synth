@@ -15,6 +15,7 @@ import { default as Mixer } from "./Mixer/Mixer.Component";
 import { default as Clock } from "./Clock/Clock.Component";
 import { default as Sequencer } from "./Sequencer/Sequencer.Component";
 import sequencerProcessorUrl from "./Sequencer/Sequencer.Processor.js?url";
+import { default as Text } from "./Text/Text.Component";
 
 export const availableNodes = new Map([
   //  [ExampleSimple.key, ExampleSimple],
@@ -31,6 +32,7 @@ export const availableNodes = new Map([
   [Mixer.key, Mixer],
   [Clock.key, Clock],
   [Sequencer.key, Sequencer],
+  [Text.key, Text],
 ]);
 
 export async function addModules(context) {
