@@ -38,6 +38,8 @@ export const useStore = createWithEqualityFn(
       },
     ],
     edges: [],
+    selection: [],
+    reactFlowInstance: undefined,
 
     toggleAudio() {
       toggleAudio();
@@ -158,6 +160,18 @@ export const useStore = createWithEqualityFn(
 
     demo() {
       get().loadPatchFromString(demoString);
+    },
+
+    delete() {
+      get().reactFlowInstance.deleteElements(get().selection);
+    },
+
+    onSelectionChange(selection) {
+      set({ selection: selection });
+    },
+
+    onInit(reactFlowInstance) {
+      set({ reactFlowInstance: reactFlowInstance });
     },
   }),
   shallow

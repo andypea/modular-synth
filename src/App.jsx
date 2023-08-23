@@ -31,6 +31,9 @@ const selector = (store) => ({
   save: store.save,
   restore: store.restore,
   demo: store.demo,
+  delete: store.delete,
+  onSelectionChange: store.onSelectionChange,
+  onInit: store.onInit,
 });
 
 export default function App() {
@@ -41,6 +44,7 @@ export default function App() {
       <div style={{ width: "100vw", height: "100vh" }}>
         <ReactFlow
           nodeTypes={nodeTypes}
+          onInit={store.onInit}
           nodes={store.nodes}
           edges={store.edges}
           onNodesChange={store.onNodesChange}
@@ -48,6 +52,7 @@ export default function App() {
           onEdgesChange={store.onEdgesChange}
           onEdgesDelete={store.onEdgesDelete}
           onConnect={store.addEdge}
+          onSelectionChange={store.onSelectionChange}
           fitView
           fitViewOptions={{ maxZoom: 1 }}
         >
@@ -77,6 +82,12 @@ export default function App() {
               onClick={store.reset}
             >
               Reset
+            </button>
+            <button
+              className={tw("px-2 py-1 rounded bg-white shadow")}
+              onClick={store.delete}
+            >
+              Delete Selected
             </button>
           </Panel>
           <Panel className={tw("space-x-4")} position="bottom-right">
