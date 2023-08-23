@@ -41,66 +41,73 @@ export default function App() {
 
   return (
     <ReactFlowProvider>
-      <div style={{ width: "100vw", height: "100vh" }}>
-        <ReactFlow
-          nodeTypes={nodeTypes}
-          onInit={store.onInit}
-          nodes={store.nodes}
-          edges={store.edges}
-          onNodesChange={store.onNodesChange}
-          onNodesDelete={store.onNodesDelete}
-          onEdgesChange={store.onEdgesChange}
-          onEdgesDelete={store.onEdgesDelete}
-          onConnect={store.addEdge}
-          onSelectionChange={store.onSelectionChange}
-          fitView
-          fitViewOptions={{ maxZoom: 1 }}
-        >
-          <Panel className={tw("space-x-4")} position="top-left">
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.demo}
-            >
-              Demo
-            </button>
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.save}
-            >
-              Save
-            </button>
-
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.restore}
-            >
-              Restore
-            </button>
-
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.reset}
-            >
-              Reset
-            </button>
-            <button
-              className={tw("px-2 py-1 rounded bg-white shadow")}
-              onClick={store.delete}
-            >
-              Delete Selected
-            </button>
-          </Panel>
-          <Panel className={tw("space-x-4")} position="bottom-right">
-            {[...availableNodes.entries()].map(([key, value]) => (
+      <div style={{ height: "55px" }}>
+        <p style={{ fontSize: "40px", lineHeight: "55px" }}>Modular Synth</p>
+      </div>
+      <div
+        style={{ position: "absolute", top: "55px", bottom: 0, width: "100%" }}
+      >
+        <div style={{ height: "100%", width: "100%" }}>
+          <ReactFlow
+            nodeTypes={nodeTypes}
+            onInit={store.onInit}
+            nodes={store.nodes}
+            edges={store.edges}
+            onNodesChange={store.onNodesChange}
+            onNodesDelete={store.onNodesDelete}
+            onEdgesChange={store.onEdgesChange}
+            onEdgesDelete={store.onEdgesDelete}
+            onConnect={store.addEdge}
+            onSelectionChange={store.onSelectionChange}
+            fitView
+            fitViewOptions={{ maxZoom: 1 }}
+          >
+            <Panel className={tw("space-x-4")} position="top-left">
               <button
-                key={key}
                 className={tw("px-2 py-1 rounded bg-white shadow")}
-                onClick={() => store.createNode(key)}
-              >{`Add ${value.name}`}</button>
-            ))}
-          </Panel>
-          <Background />
-        </ReactFlow>
+                onClick={store.demo}
+              >
+                Demo
+              </button>
+              <button
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={store.save}
+              >
+                Save
+              </button>
+
+              <button
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={store.restore}
+              >
+                Restore
+              </button>
+
+              <button
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={store.reset}
+              >
+                Reset
+              </button>
+              <button
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={store.delete}
+              >
+                Delete Selected
+              </button>
+            </Panel>
+            <Panel className={tw("space-x-4")} position="bottom-right">
+              {[...availableNodes.entries()].map(([key, value]) => (
+                <button
+                  key={key}
+                  className={tw("px-2 py-1 rounded bg-white shadow")}
+                  onClick={() => store.createNode(key)}
+                >{`Add ${value.name}`}</button>
+              ))}
+            </Panel>
+            <Background />
+          </ReactFlow>
+        </div>
       </div>
     </ReactFlowProvider>
   );
