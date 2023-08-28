@@ -62,7 +62,18 @@ export default function App() {
             fitView
             fitViewOptions={{ maxZoom: 1 }}
           >
-            <Panel className={tw("space-x-4")} position="top-left">
+            <Panel>
+              {[...availableNodes.entries()].map(([key, value]) => (
+                <button
+                  key={key}
+                  className={tw("px-2 py-1 rounded bg-white shadow")}
+                  onClick={() => {
+                    store.createNode(key);
+                  }}
+                >{`Add ${value.name}`}</button>
+              ))}
+            </Panel>
+            <Panel className={tw("space-x-4")} position="bottom-right">
               <button
                 className={tw("px-2 py-1 rounded bg-white shadow")}
                 onClick={store.demo}
@@ -95,15 +106,12 @@ export default function App() {
               >
                 Delete Selected
               </button>
-            </Panel>
-            <Panel className={tw("space-x-4")} position="bottom-right">
-              {[...availableNodes.entries()].map(([key, value]) => (
-                <button
-                  key={key}
-                  className={tw("px-2 py-1 rounded bg-white shadow")}
-                  onClick={() => store.createNode(key)}
-                >{`Add ${value.name}`}</button>
-              ))}
+              <button
+                className={tw("px-2 py-1 rounded bg-white shadow")}
+                onClick={() => setShowDropDown((oldValue) => ~oldValue)}
+              >
+                Toggle Dropdown
+              </button>
             </Panel>
             <Background />
           </ReactFlow>
