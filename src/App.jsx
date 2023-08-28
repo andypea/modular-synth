@@ -106,12 +106,6 @@ export default function App() {
               >
                 Delete Selected
               </button>
-              <button
-                className={tw("px-2 py-1 rounded bg-white shadow")}
-                onClick={() => setShowDropDown((oldValue) => ~oldValue)}
-              >
-                Toggle Dropdown
-              </button>
             </Panel>
             <Background />
           </ReactFlow>
