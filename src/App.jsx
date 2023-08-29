@@ -62,7 +62,7 @@ export default function App() {
             fitView
             fitViewOptions={{ maxZoom: 1 }}
           >
-            <Panel>
+            <Panel className={tw("space-x-4")} position="bottom-right">
               {[...availableNodes.entries()].map(([key, value]) => (
                 <button
                   key={key}
@@ -73,7 +73,7 @@ export default function App() {
                 >{`Add ${value.name}`}</button>
               ))}
             </Panel>
-            <Panel className={tw("space-x-4")} position="bottom-right">
+            <Panel className={tw("space-x-4")} position="top-left">
               <button
                 className={tw("px-2 py-1 rounded bg-white shadow")}
                 onClick={store.demo}
